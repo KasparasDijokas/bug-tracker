@@ -1,5 +1,5 @@
 import styled from "styled-components/macro";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 export const Container = styled.div`
   width: 100vw;
@@ -19,19 +19,27 @@ export const Inner = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 15px;
+  overflow: hidden;
 `;
 
-export const Form = styled.div`
+export const FormContainer = styled.div`
   width: 735px;
   height: 468px;
   display: flex;
   justify-content: space-between;
+  @media (max-width: 1000px) {
+    justify-content: center;
+  }
 `;
 
 export const PictureContainer = styled.div`
   width: 316px;
   display: flex;
   align-items: center;
+
+  @media (max-width: 1000px) {
+    display: none;
+  }
 `;
 
 export const Image = styled.img`
@@ -47,7 +55,7 @@ export const DetailsContainer = styled.div`
 `;
 
 export const Title = styled.h1`
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-size: 24px;
   color: #333;
@@ -60,7 +68,7 @@ export const Title = styled.h1`
 `;
 
 export const Input = styled.input`
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-weight: 500;
   font-size: 15px;
   line-height: 1.5;
@@ -76,7 +84,7 @@ export const Input = styled.input`
 `;
 
 export const Button = styled.button`
-  font-family: 'Montserrat', sans-serif;
+  font-family: "Montserrat", sans-serif;
   font-weight: bold;
   font-size: 15px;
   line-height: 1.5;
@@ -91,7 +99,7 @@ export const Button = styled.button`
   cursor: pointer;
 
   &:focus {
-      outline: none;
+    outline: none;
   }
 
   &:hover {
@@ -100,7 +108,7 @@ export const Button = styled.button`
 `;
 
 export const Span = styled.span`
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 13px;
   line-height: 1.5;
   color: #999;
@@ -108,7 +116,7 @@ export const Span = styled.span`
 `;
 
 export const LinkEl = styled(Link)`
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
   font-size: 13px;
   line-height: 1.5;
   color: #666;
@@ -129,19 +137,19 @@ export const InputWrapper = styled.div`
 `;
 
 export const Icon = styled.span`
-font-size: 15px;
-display: flex;
-align-items: center;
-position: absolute;
-border-radius: 25px;
-bottom: 0;
-left: 0;
-width: 100%;
-height: 100%;
-padding-left: 35px;
-pointer-events: none;
-color: #666;
-transition: all .4s;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  position: absolute;
+  border-radius: 25px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding-left: 35px;
+  pointer-events: none;
+  color: #666;
+  transition: all 0.4s;
 `;
 
 export const Frame = styled.div`
@@ -154,4 +162,15 @@ export const AccountWrapper = styled.div`
   bottom: 0;
   width: 290px;
   text-align: center;
+`;
+
+export const Message = styled.p`
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: ${(props) => (props.error ? "red" : "#57b846")};
+  text-decoration: none;
+  width: 100%;
+  text-align: center;
+  margin: 0;
 `;
