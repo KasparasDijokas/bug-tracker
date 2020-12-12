@@ -3,31 +3,32 @@ import { NavLink } from "react-router-dom";
 
 export const Container = styled.div`
   background-color: #152029;
-  width: 200px;
+  width: 220px;
   height: 100vh;
   color: #fff;
+  padding: 0 10px;
+  position: relative;
+  transition: all 0.3s ease;
+
+  .fa-chevron-right {
+    font-size: 2rem;
+    position: absolute;
+    right: 0px;
+    top: 40%;
+    display: none;
+
+    @media(max-width: 415px) {
+      display: block;
+    }
+  }
+
+  @media(max-width: 415px) {
+    transform: ${props => !props.show ? 'translate(-200px)' : 'translate(0)'};
+  }
 `;
 
 export const Inner = styled.div`
     
-`;
-
-export const Header = styled.div`
-  background-color: #0f181e;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 15px;
-
-  img {
-    width: 45px;
-    height: 45px;
-  }
-
-  span {
-    font-family: "opensans light", sans-serif;
-    font-size: 1.375rem;
-  }
 `;
 
 export const Summary = styled.div`
@@ -35,7 +36,7 @@ export const Summary = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  padding-top: 20px;
 
   img {
     width: 70px;
@@ -85,4 +86,5 @@ border-left: 4px solid transparent;
 span {
     padding-right: 15px;
 }
+
 `;

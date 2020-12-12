@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import { Form } from "../components/index";
+import { Form } from "../components";
 import FormImage from "../Images/login.png";
 import firebase from "../Config/firebase";
 import * as ROUTES from "../Constants/routes";

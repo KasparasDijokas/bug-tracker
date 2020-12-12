@@ -1,15 +1,14 @@
-import React from 'react';
-import Dashboard from '../components/Dashboard';
+import React, {useState} from 'react';
+import {Dashboard} from '../components';
 import logo from '../Images/logo_main.png';
 
 const DashboardContainer = () => {
+    const [openDashboad, setOpenDashboard] = useState(false);
+
     return (
-        <Dashboard>
-            <Dashboard.Header>
-                <img src={logo} alt="logo"/>
-                <span>BugTracker</span>
-            </Dashboard.Header>
-            <Dashboard.Summary>
+        <Dashboard show={openDashboad}>
+            <Dashboard.Summary onClick={() => setOpenDashboard(!openDashboad)} >
+                <i onClick={() => setOpenDashboard(!openDashboad)} class="fas fa-chevron-right"></i>
                 <img src={logo} alt="logo"/>
                 <h1>Project name (props)</h1>
                 <p>You are <span>Owner(props)</span></p>
@@ -24,3 +23,5 @@ const DashboardContainer = () => {
 }
 
 export default DashboardContainer;
+
+{/* <i class="far fa-times-circle"></i> */}
