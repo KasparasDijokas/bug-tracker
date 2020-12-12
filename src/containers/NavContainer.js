@@ -18,7 +18,7 @@ const NavContainer = () => {
 
   const [showNav, setShowNav] = useState(false);
   const tabletNavHandler = () => {
-    setShowNav((prevValue) => !showNav);
+    setShowNav(!showNav);
   };
 
   return (
@@ -28,13 +28,11 @@ const NavContainer = () => {
         <span>BugTracker</span>
       </Nav.Header>
       <Nav.Body showNav={showNav}>
-        <span onClick={tabletNavHandler}>
-          {!showNav ? (
-            <i class="far fa-times-circle"></i>
-          ) : (
-            <i class="fas fa-angle-double-left"></i>
-          )}
-        </span>
+        {!showNav ? (
+          <i class="fas fa-angle-double-left" onClick={tabletNavHandler}></i>
+        ) : (
+          <i class="far fa-times-circle" onClick={tabletNavHandler}></i>
+        )}
         <Nav.TextLink to="/organizations">My Organizations</Nav.TextLink>
         <Nav.TextLink to="/projects">My Projects</Nav.TextLink>
         <Nav.Button onClick={addOrganizationHandler}>

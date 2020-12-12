@@ -20,7 +20,7 @@ export const Body = styled.div`
 
   @media (max-width: 1100px) {
     flex-direction: column;
-    background-color: #eaedf0;
+    background-color: #152029;
     height: 100vh;
     justify-content: center;
     width: 200px;
@@ -29,25 +29,25 @@ export const Body = styled.div`
     padding: 0 30px;
     transition: all 0.5s ease-in-out;
     transform: ${({ showNav }) =>
-      showNav ? "translate(170px)" : "translate(0)"};
+      !showNav ? "translate(170px)" : "translate(0)"};
 
-      span {
-        i {
-          font-size: 1.5rem;
-          color: #62687e;
-          cursor: pointer;
-          position: absolute;
-          top: 5px;
-          left: 5px;
-          transition: all 0.2s ease-in-out;
-          display: inline-block;
-    
-          &:hover {
-            color: #28bd8b;
-          }
-        }
+    .fa-angle-double-left,
+    .fa-times-circle {
+      font-size: 1.5rem;
+      color: #28bd8b;
+      cursor: pointer;
+      position: absolute;
+    }
+
+    .fa-angle-double-left {
+      top: 50%;
+      left: 5px;
+    }
+    .fa-times-circle {
+      top: 82px;
+      left: 5px;
+    }
   }
-
 `;
 
 export const Header = styled.div`
@@ -68,8 +68,9 @@ export const Header = styled.div`
     font-size: 1.375rem;
   }
 
-  @media(max-width: 415px) {
+  @media (max-width: 415px) {
     width: 100%;
+    z-index: 2;
   }
 `;
 
@@ -147,9 +148,9 @@ export const Wrapper = styled.div`
   }
 
   @media (max-width: 1100px) {
-      img {
-          display: none;
-      }
+    img {
+      display: none;
+    }
   }
 `;
 

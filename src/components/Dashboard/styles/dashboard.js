@@ -6,7 +6,7 @@ export const Container = styled.div`
   width: 220px;
   height: 100vh;
   color: #fff;
-  padding: 0 10px;
+  padding-right: 20px;
   position: relative;
   transition: all 0.3s ease;
 
@@ -16,9 +16,26 @@ export const Container = styled.div`
     right: 0px;
     top: 40%;
     display: none;
+    color: #28bd8b;
+
+    &:hover {
+      color: rgba(255,255,255,0.8);
+    }
 
     @media(max-width: 415px) {
       display: block;
+    }
+  }
+
+  .fa-times-circle {
+    font-size: 1.2rem;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: #28bd8b;
+
+    &:hover {
+      color: rgba(255,255,255,0.8);
     }
   }
 
