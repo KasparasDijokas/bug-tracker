@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Form } from "../components/index";
-import loginImage from "../Images/login.png";
+import loginImage from "../images/login.png";
 import { createUser } from "../Redux/Actions";
 import { connect } from "react-redux";
-import firebase from "../Config/firebase";
+import firebase from "../config/firebase";
 import { useHistory } from "react-router-dom";
-import * as ROUTES from "../Constants/routes";
+import * as ROUTES from "../constants/routes";
 
 const Signup = (props) => {
   const history = useHistory();

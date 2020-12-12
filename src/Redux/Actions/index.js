@@ -1,5 +1,5 @@
-import firebase from "../../Config/firebase";
-import * as TYPES from "../../Constants/actions";
+import firebase from "../../config/firebase";
+import * as TYPES from "../../constants/actions";
 
 export const createUser = ({name, email, password, repeatPassword}) => {
     console.log('runinng', name, email);
@@ -13,3 +13,9 @@ export const createUser = ({name, email, password, repeatPassword}) => {
     },
   };
 };
+
+export const showModal = () => {
+  return {
+    type: TYPES.SHOW_MODAL,
+  }
+}

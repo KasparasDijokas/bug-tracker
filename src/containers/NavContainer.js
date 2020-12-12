@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import { Nav } from "../components";
-import logo from "../Images/logo_main.png";
-import user from "../Images/user.png";
+import logo from "../images/logo_main.png";
+import user from "../images/user.png";
+import {Button} from '../components';
+import {connect} from 'react-redux';
+import {showModal} from '../Redux/Actions'
 
-const NavContainer = () => {
-  const addOrganizationHandler = () => {
-    console.log("add organization");
-  };
+const NavContainer = (props) => {
+  // const addOrganizationHandler = () => {
+  //   console.log("add organization");
+  // };
 
   const addProjectHandler = () => {
-    console.log("add project");
+    props.showModal();
   };
 
   const reportBugHandler = () => {
@@ -33,15 +36,12 @@ const NavContainer = () => {
         ) : (
           <i class="far fa-times-circle" onClick={tabletNavHandler}></i>
         )}
-        <Nav.TextLink to="/organizations">My Organizations</Nav.TextLink>
+        {/* <Nav.TextLink to="/organizations">My Organizations</Nav.TextLink> */}
         <Nav.TextLink to="/projects">My Projects</Nav.TextLink>
-        <Nav.Button onClick={addOrganizationHandler}>
-          Add Organization
-        </Nav.Button>
-        <Nav.Button onClick={addProjectHandler}>Add Project</Nav.Button>
-        <Nav.Button error onClick={reportBugHandler}>
+        <Button onClick={addProjectHandler}>Add Project</Button>
+        <Button error onClick={reportBugHandler}>
           Report a Bug
-        </Nav.Button>
+        </Button>
         <Nav.Wrapper>
           <img src={user} alt="user" />
           <Nav.TextLink to="/profile">My Profile</Nav.TextLink>
@@ -55,4 +55,10 @@ const NavContainer = () => {
   );
 };
 
-export default NavContainer;
+const mapStateToProps = (state) => {
+  return {
+    modalState: state.showModalReducer,
+  }
+}
+
+export default connect(mapStateToProps, {showModal: showModal})(NavContainer);

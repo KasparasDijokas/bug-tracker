@@ -1,13 +1,15 @@
 import React from 'react';
-import DashboardContiner from '../containers/DashboardContainer';
+import DashboardContainer from '../containers/DashboardContainer';
 import {withRouter} from 'react-router';
 import NavContainer from '../containers/NavContainer';
+import {Modal} from '../components';
 
 const Home = (props) => {
     return (
         <>
         <NavContainer/>
-        <DashboardContiner/>
+        <DashboardContainer/>
+        <Modal>modal</Modal>
         </>
     )
 }

@@ -3,7 +3,6 @@ import {
   Container,
   Inner,
   TextLink,
-  Button,
   Header,
   Wrapper,
   Body,
@@ -27,9 +26,6 @@ Nav.TextLink = function NavTextLink({ children, ...restProps }) {
   return <TextLink {...restProps}>{children}</TextLink>;
 };
 
-Nav.Button = function NavButton({ children, ...restProps }) {
-  return <Button {...restProps}>{children}</Button>;
-};
 
 Nav.Wrapper = function NavWrapper({ children, ...restProps }) {
   return <Wrapper {...restProps}>{children}</Wrapper>;

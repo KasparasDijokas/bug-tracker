@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Dashboard } from "../components";
-import logo from "../Images/logo_main.png";
+import logo from "../images/logo_main.png";
 
 const DashboardContainer = () => {
   const [openDashboad, setOpenDashboard] = useState(false);
@@ -61,6 +61,3 @@ const DashboardContainer = () => {
 
 export default DashboardContainer;
 
-{
-  /* <i class="far fa-times-circle"></i> */
-}
