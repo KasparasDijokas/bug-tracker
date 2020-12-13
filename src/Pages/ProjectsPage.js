@@ -4,6 +4,7 @@ import DashboardContainer from "../containers/DashboardContainer";
 import NavContainer from "../containers/NavContainer";
 import user from '../images/user.png';
 import {Button} from '../components';
+import Dropzone from '../components/Dropzone/Dropzone';
 
 const ProjectsPage = () => {
   return (
@@ -66,7 +67,6 @@ const ProjectsPage = () => {
             </Project.Card>
           </Project.ProjectCard>
         </Project.Main>
-
         </Project.Body>
       </Project>
     </>
