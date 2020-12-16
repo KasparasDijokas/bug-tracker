@@ -1,12 +1,20 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Project } from "../components";
 import DashboardContainer from "../containers/DashboardContainer";
 import NavContainer from "../containers/NavContainer";
 import user from '../images/user.png';
 import {Button} from '../components';
-import Dropzone from '../components/Dropzone/Dropzone';
+import {connect}from 'react-redux';
+import {syncProjects} from '../Redux/Actions'
 
-const ProjectsPage = () => {
+const ProjectsPage = (props) => {
+
+  useEffect(() => {
+    props.syncProjects()
+  }, []);
+  
+  
+  console.log(props.projects.userProjects)
   return (
     <>
       <NavContainer />
@@ -34,38 +42,46 @@ const ProjectsPage = () => {
             <h2>My Projects</h2>
             <Button>Create New Project</Button>
           </Project.ProjectHeader>
-          <Project.ProjectCard>
-          <img src={user} alt="user"/>
-            <Project.Wrapper direction="column">
-            <h1>name props redux</h1>
-            <p>Created: props redux</p>
-            <p>Owner: name redux</p>
-            </Project.Wrapper>
-            <Project.Card>
-              <h2>Issues</h2>
-              <span>02</span>
-            </Project.Card>
-            <Project.Card>
-              <h2>Employees</h2>
-              <span>02</span>
-            </Project.Card>
-          </Project.ProjectCard>
-          <Project.ProjectCard>
-          <img src={user} alt="user"/>
-            <Project.Wrapper direction="column">
-            <h1>name props redux</h1>
-            <p>Created: props redux</p>
-            <p>Owner: name redux</p>
-            </Project.Wrapper>
-            <Project.Card>
-              <h2>Issues</h2>
-              <span>02</span>
-            </Project.Card>
-            <Project.Card>
-              <h2>Employees</h2>
-              <span>02</span>
-            </Project.Card>
-          </Project.ProjectCard>
+          { !props.projects.userProjects ? '' : props.projects.userProjects.map((project) => {
+              return (
+                <Project.ProjectCard key={project.createdAt.seconds}>
+                <img src={user} alt="user"/>
+                  <Project.Wrapper direction="column">
+                  <h1>{project.title}</h1>
+                  <p>Created: {project.createdAt.toDate().toLocaleString()}</p>
+                  <p>Owner: {project.author}</p>
+                  </Project.Wrapper>
+                  <Project.Card>
+                    <h2>Issues</h2>
+                    <span>02</span>
+                  </Project.Card>
+                  <Project.Card>
+                    <h2>Employees</h2>
+                    <span>02</span>
+                  </Project.Card>
+                </Project.ProjectCard>
+              )
+          })
+
+            }
+
+{/* <Project.ProjectCard>
+                <img src={user} alt="user"/>
+                  <Project.Wrapper direction="column">
+                  <h1>{props.projects.userProjects[0].title}</h1>
+                  <p>Created: {props.projects.userProjects[0].createdAt}</p>
+                  <p>Owner: {props.projects.userProjects[0].author}</p>
+                  </Project.Wrapper>
+                  <Project.Card>
+                    <h2>Issues</h2>
+                    <span>02</span>
+                  </Project.Card>
+                  <Project.Card>
+                    <h2>Employees</h2>
+                    <span>02</span>
+                  </Project.Card>
+                </Project.ProjectCard> */}
+
         </Project.Main>
         </Project.Body>
       </Project>
@@ -73,4 +89,11 @@ const ProjectsPage = () => {
   );
 };
 
-export default ProjectsPage;
+const mapStateToProps = state => {
+  console.log(state);
+  return {
+    projects: state.projects
+  }
+}
+
+export default connect(mapStateToProps, {syncProjects})(ProjectsPage);
