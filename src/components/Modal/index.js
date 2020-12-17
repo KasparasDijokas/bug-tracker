@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import "./modal.css";
 import Button from "../Button";
@@ -7,7 +6,6 @@ import Dropzone from "../../components/Dropzone/Dropzone";
 import { showModal } from "../../Redux/Actions";
 import { createProject } from "../../Redux/Actions";
 import { syncProjects } from "../../Redux/Actions";
-import firebase from "../../config/firebase";
 
 function Modal(props) {
   const [userInput, setuserInput] = useState({

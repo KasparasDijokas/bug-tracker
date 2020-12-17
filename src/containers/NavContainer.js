@@ -4,14 +4,17 @@ import logo from "../images/logo_main.png";
 import user from "../images/user.png";
 import {Button} from '../components';
 import {connect} from 'react-redux';
-import {showModal} from '../Redux/Actions'
+import {showModal} from '../Redux/Actions';
+import {Modal} from '../components';
 
 const NavContainer = (props) => {
   // const addOrganizationHandler = () => {
   //   console.log("add organization");
   // };
 
-  const addProjectHandler = () => {
+  const addProjectHandler = (e) => {
+    console.log('show modal');
+    e.preventDefault();
     props.showModal();
   };
 
@@ -25,6 +28,8 @@ const NavContainer = (props) => {
   };
 
   return (
+    <>
+      <Modal/>
     <Nav>
       <Nav.Header>
         <img src={logo} alt="logo" />
@@ -52,6 +57,7 @@ const NavContainer = (props) => {
       </Nav.Body>
       <Nav.TabletNav></Nav.TabletNav>
     </Nav>
+    </>
   );
 };
 
