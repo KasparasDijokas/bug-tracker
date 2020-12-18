@@ -1,54 +1,18 @@
-import React, { useState } from "react";
-import * as TYPES from "../../constants/actions";
-import firebase from "../../config/firebase";
 import { combineReducers } from "redux";
+import authReducer from './authReducer';
+import createProjectReducer from './createProjectReducer';
+import modalReducer from './modalReducer';
+import syncProjectsReducer from './syncProjectsReducer';
+import { firebaseReducer } from 'react-redux-firebase';
+import { firestoreReducer } from 'redux-firestore'; 
 
-const authReducer = (state = {}, action) => {
-  switch (action.type) {
-    case TYPES.CREATE_USER:
-      break;
-    default:
-    //   console.log('default');
-  }
-  return state;
-};
 
-const showModalReducer = (state = false, action) => {
-  let showModalState = false;
-  if (action.type === TYPES.SHOW_MODAL) {
-    showModalState = !state;
-    return showModalState;
-  }
-
-  return state;
-};
-
-const createProjectReducer = (state = {}, action) => {
-  switch (action.type) {
-    case TYPES.CREATE_PROJECT:
-      return action.payload;
-
-    case TYPES.CREATE_PROJECT.ERROR:
-      console.log(action.error);
-      break;
-    default:
-      return state;
-  }
-};
-
-const syncProjectsReducer = (state = [], action) => {
-    if (action.type === TYPES.SYNC_PROJECTS) {
-     return action.payload;
-    }
-  
-    return state;
-}
-
-const reducers = combineReducers({
-  authReducer,
-  showModalReducer,
-  createProjectReducer,
-  projects: syncProjectsReducer
+export const rootReducer = combineReducers({
+  firestore: firestoreReducer, 
+  firebase: firebaseReducer,
+  auth: authReducer,
+  modal: modalReducer,
+  createProject: createProjectReducer,
+  allProjects: syncProjectsReducer,
 });
 
-export default reducers;

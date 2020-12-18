@@ -4,15 +4,17 @@ import "firebase/firestore";
 import "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDl7lXvRM3zK6g8vb07D9Mwj_BWRBGTcA4",
-  authDomain: "bug-tracker-83126.firebaseapp.com",
-  projectId: "bug-tracker-83126",
-  storageBucket: "bug-tracker-83126.appspot.com",
-  messagingSenderId: "418789037039",
-  appId: "1:418789037039:web:8e800db57a200cb45edc1a",
+  apiKey: "AIzaSyAV9DucydnF7hu5R1vdjKkQvFhhwFNSSD0",
+  authDomain: "bug-trackerv2.firebaseapp.com",
+  projectId: "bug-trackerv2",
+  storageBucket: "bug-trackerv2.appspot.com",
+  messagingSenderId: "570881381207",
+  appId: "1:570881381207:web:3ddecd25d7307ec8eea412"
 };
 
+
 firebase.initializeApp(firebaseConfig);
+firebase.firestore();
 firebase.firestore().settings({timestampsInSnapshots: true});
 
 export default firebase;

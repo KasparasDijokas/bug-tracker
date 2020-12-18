@@ -1,37 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Project } from "../components";
 import DashboardContainer from "../containers/DashboardContainer";
 import NavContainer from "../containers/NavContainer";
 import user from "../images/user.png";
 import { Button } from "../components";
+// redux
 import { connect } from "react-redux";
-import { syncProjects } from "../Redux/Actions";
-import firebase from "../config/firebase";
-import {showModal} from '../Redux/Actions';
+import { showModal } from "../Redux/Actions";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useFirestoreConnect } from "react-redux-firebase";
 
 const ProjectsPage = (props) => {
-  const [data, setData] = useState(null);
+  // destructure current user data
+  const { displayName, email, createdAt, lastLoginAt } = useSelector( 
+    (state) => {
+      
+      // console.log(state.firebase.data)
+      return state.firebase.auth
+    }
+  );
 
-  useEffect(() => {
-    const unsubscribe = firebase
-    .firestore()
-      .collection("projects")
-      .onSnapshot((snapshot) => {
-        if (snapshot.size) {
-          const allProjects = [];
-          snapshot.forEach((userDoc) => {
-            const project = userDoc.data();
-            allProjects.push(project);
-          });
-          setData(allProjects);
-        } else {
-          console.log("collection is empty");
-        }
-      });
-      return () => {
-        unsubscribe()
-      }
+  // data conversion
+  let registrationDate = new Date();
+  registrationDate.setTime(+createdAt);
+
+  let lastLoginDate = new Date();
+  lastLoginDate.setTime(+lastLoginAt);
+
+  // listen to firestore 
+  useFirestoreConnect({
+    collection: `users/${email}/projects`,
+    storeAs: "projects",
   });
+
+  // access projects 
+  const projects = useSelector((state) => {
+    console.log(state.firestore.data.projects)
+    return state.firestore.data.projects;
+  });
+  console.log()
 
   return (
     <>
@@ -42,13 +50,13 @@ const ProjectsPage = (props) => {
           <Project.Header>
             <img src={user} alt="user" />
             <Project.Wrapper direction="column">
-              <h1>name props</h1>
-              <p>Registration date: props</p>
-              <p>Last Sign In at: props</p>
+              <h1>{displayName}</h1>
+              <p>Registration date: {registrationDate.toLocaleDateString()}</p>
+              <p>Last Sign In at: {lastLoginDate.toLocaleString()}</p>
             </Project.Wrapper>
             <Project.Card>
               <h2>My Projects</h2>
-              <span>02</span>
+              <span>{projects ? Object.keys(projects).length : '0'}</span>
             </Project.Card>
             <Project.Card>
               <h2>Employees</h2>
@@ -58,20 +66,22 @@ const ProjectsPage = (props) => {
           <Project.Main>
             <Project.ProjectHeader>
               <h2>My Projects</h2>
-              <Button onClick={() => props.showModal()}>Create New Project</Button>
+              <Button onClick={() => props.showModal()}>
+                Create New Project
+              </Button>
             </Project.ProjectHeader>
-            {!data
+            {!projects
               ? ""
-              : data.map((project) => {
+              : Object.keys(projects).map((el) => {
                   return (
-                    <Project.ProjectCard key={project.createdAt.seconds}>
+                    <Project.ProjectCard key={projects[el].projectId}>
                       <img src={user} alt="user" />
                       <Project.Wrapper direction="column">
-                        <h1>{project.title}</h1>
-                        <p>
-                          Created: {project.createdAt.toDate().toLocaleString()}
-                        </p>
-                        <p>Owner: {project.author}</p>
+                        <Link to={`/${projects[el].projectId}`}>
+                          <h1>{projects[el].title}</h1>
+                        </Link>
+                        <p>Created: {projects[el].createdAt}</p>
+                        <p>Owner: {projects[el].projectAuthor}</p>
                       </Project.Wrapper>
                       <Project.Card>
                         <h2>Issues</h2>
@@ -91,11 +101,6 @@ const ProjectsPage = (props) => {
   );
 };
 
-const mapStateToProps = (state) => {
-  console.log(state);
-  return {
-    projects: state.projects,
-  };
-};
-
-export default connect(mapStateToProps, { syncProjects, showModal })(ProjectsPage);
+export default connect(null, {
+  showModal,
+})(ProjectsPage);

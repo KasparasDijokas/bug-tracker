@@ -4,8 +4,9 @@ import "./modal.css";
 import Button from "../Button";
 import Dropzone from "../../components/Dropzone/Dropzone";
 import { showModal } from "../../Redux/Actions";
-import { createProject } from "../../Redux/Actions";
 import { syncProjects } from "../../Redux/Actions";
+import { useFirestore } from "react-redux-firebase";
+import { useSelector } from "react-redux";
 
 function Modal(props) {
   const [userInput, setuserInput] = useState({
@@ -14,8 +15,6 @@ function Modal(props) {
     title: "",
   });
 
-  const [data, setData] = useState(null);
-
   const formHandler = (e) => {
     setuserInput({
       ...userInput,
@@ -23,19 +22,39 @@ function Modal(props) {
     });
   };
 
-  const uploadFormData = (e) => {
-    e.preventDefault();
-    props.createProject(userInput);
+  // create project in firestore
+  const firestore = useFirestore();
+  // destructure author name and email
+  const { email, displayName } = useSelector((state) => {
+    return state.firebase.auth;
+  });
+
+  // add new project
+  const addNewProject = (project) => {
+    firestore
+      .collection("users")
+      .doc(email)
+      .collection("projects")
+      .add({
+        ...project,
+        projectId: '',
+        projectAuthor: displayName,
+        createdAt: new Date().toDateString()
+      })
+      .then((docRef) => {
+        docRef.update({
+          projectId: docRef.id, // => update project id
+        });
+      });
+    setuserInput("");
     props.showModal();
-  };
+    }
 
   const cancelModal = (e) => {
     console.log(e);
     e.preventDefault();
     props.showModal();
   };
-
-
 
   return (
     <>
@@ -82,7 +101,7 @@ function Modal(props) {
               ></input>
             </div>
             <div className="buttons">
-              <Button onClick={uploadFormData}>Add New Project</Button>
+              <Button onClick={(e) => {e.preventDefault(); addNewProject(userInput)}}>Add New Project</Button>
               <Button onClick={cancelModal} error>
                 Cancel
               </Button>
@@ -107,12 +126,11 @@ function Modal(props) {
 
 const mapStateToProps = (state) => {
   return {
-    modalState: state.showModalReducer,
+    modalState: state.modal,
   };
 };
 
 export default connect(mapStateToProps, {
   showModal,
-  createProject,
   syncProjects,
 })(Modal);

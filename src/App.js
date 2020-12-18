@@ -7,6 +7,7 @@ import Home from "./pages/Home";
 import Projects from "./pages/ProjectsPage";
 import NavContainer from "./containers/NavContainer";
 import DashboardContainer from "./containers/DashboardContainer";
+import ProjectDetails from "./pages/ProjectDetails";
 
 function App() {
   return (
@@ -28,6 +29,9 @@ function App() {
           </Route>
           <Route exact path="/projects">
             <Projects />
+          </Route>
+          <Route path="/:id">
+            <ProjectDetails/>
           </Route>
         </Switch>
       </Router>
