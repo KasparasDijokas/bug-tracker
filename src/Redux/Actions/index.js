@@ -1,15 +1,28 @@
-import firebase from "../../Config/firebase";
-import * as TYPES from "../../Constants/actions";
+import * as TYPES from "../../constants/actions";
 
-export const createUser = ({name, email, password, repeatPassword}) => {
-    console.log('runinng', name, email);
+export const createUser = (user) => {
   return {
     type: TYPES.CREATE_USER,
     payload: {
-      name: name,
-      email: email,
-      password: password,
-      repeatPassword: repeatPassword,
+      name: user.displayName,
+      email: user.email,
+      password: user.password,
     },
   };
 };
+
+export const showModal = (project) => {
+  return {
+    type: TYPES.SHOW_MODAL
+  };
+};
+
+export const saveCurrentProject = (project) => {
+  // console.log(project);
+  return {
+    type: TYPES.SAVE_CURRENT_PROJECT,
+    payload: {
+      ...project
+    }
+  }
+}

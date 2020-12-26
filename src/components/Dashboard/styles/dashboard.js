@@ -3,12 +3,14 @@ import { NavLink } from "react-router-dom";
 
 export const Container = styled.div`
   background-color: #152029;
-  width: 220px;
+  display: inline-block;
+  min-width: 220px;
   height: 100vh;
   color: #fff;
   padding-right: 20px;
   position: relative;
   transition: all 0.3s ease;
+  display: inline-block;
 
   .fa-chevron-right {
     font-size: 2rem;
@@ -45,7 +47,7 @@ export const Container = styled.div`
 `;
 
 export const Inner = styled.div`
-    
+   
 `;
 
 export const Summary = styled.div`

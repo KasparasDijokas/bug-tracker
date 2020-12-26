@@ -1,19 +1,14 @@
-import * as TYPES from '../../Constants/actions';
-import firebase from '../../Config/firebase';
-import {combineReducers} from 'redux';
+import { combineReducers } from "redux";
+import authReducer from './authReducer';
+import modalReducer from './modalReducer';
+import { firebaseReducer } from 'react-redux-firebase';
+import { firestoreReducer } from 'redux-firestore'; 
 
- const authReducer = (state = {}, action) => {
-  switch(action.type) {
-      case TYPES.CREATE_USER: 
-      break;
-      default:
-          console.log('default');
-  }
-  return state;
-};
 
-const reducers = combineReducers({
-    authReducer
-})
+export const rootReducer = combineReducers({
+  firestore: firestoreReducer, 
+  firebase: firebaseReducer,
+  auth: authReducer,
+  modal: modalReducer
+});
 
-export default reducers;
