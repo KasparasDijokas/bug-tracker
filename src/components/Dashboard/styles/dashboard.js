@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 export const Container = styled.div`
   background-color: #152029;
-  display: flex;
+  display: inline-block;
   min-width: 220px;
   height: 100vh;
   color: #fff;

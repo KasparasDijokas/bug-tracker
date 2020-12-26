@@ -4,11 +4,11 @@ import "./modal.css";
 import Button from "../Button";
 import Dropzone from "../../components/Dropzone/Dropzone";
 import { showModal } from "../../Redux/Actions";
-import { syncProjects } from "../../Redux/Actions";
 import { useFirestore } from "react-redux-firebase";
 import { useSelector } from "react-redux";
 
 function Modal(props) {
+
   const [userInput, setuserInput] = useState({
     category: "",
     platform: "",
@@ -84,11 +84,11 @@ function Modal(props) {
               <p>Platform</p>
               <div onChange={formHandler}>
                 <input type="radio" name="platform" value="android" />
-                <label for="android">Android</label>
+                <label htmlFor="android">Android</label>
                 <input type="radio" name="platform" value="apple" />
-                <label for="apple">iOS</label>
+                <label htmlFor="apple">iOS</label>
                 <input type="radio" name="platform" value="web" />
-                <label for="web">Web</label>
+                <label htmlFor="web">Web</label>
               </div>
             </div>
             <div>
@@ -132,5 +132,4 @@ const mapStateToProps = (state) => {
 
 export default connect(mapStateToProps, {
   showModal,
-  syncProjects,
 })(Modal);

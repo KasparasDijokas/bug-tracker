@@ -1,18 +1,17 @@
 import styled from "styled-components/macro";
 
 export const Container = styled.div`
+  width: 100%;
+  margin: 0 auto;
 `;
 
-export const Inner = styled.div`
-  display: flex;
-`;
+export const Inner = styled.div``;
 
 export const Body = styled.div`
-display: flex;
-flex-direction: column;
-width: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 `;
-
 
 export const Header = styled.div`
   background: #fff;
@@ -58,20 +57,27 @@ export const Card = styled.div`
   span {
     color: #28bd8b;
     font-size: 2.625rem;
-    font-weight: bold;  
+    font-weight: bold;
   }
 
   h2 {
-      margin: 0 0 8px;
+    margin: 0 0 8px;
   }
 `;
-
-
 
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: ${(props) => props.direction};
   flex-grow: 2;
+
+  h1 {
+    cursor: pointer;
+  }
+
+  div {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 export const ProjectHeader = styled.div`
@@ -83,16 +89,16 @@ export const ProjectHeader = styled.div`
 `;
 
 export const ProjectCard = styled.div`
-height: 110px;
-margin: 10px 0;
-background-color: #f4f5f6;
-border-radius: 6px;
-display: flex;
-align-items: center;
-width: 90%;
-margin: 0 auto 10px;
+  height: 110px;
+  margin: 10px 0;
+  background-color: #f4f5f6;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  width: 90%;
+  margin: 0 auto 10px;
 
-img {
+  img {
     float: left;
     width: 90px;
     height: 90px;

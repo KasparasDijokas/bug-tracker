@@ -7,34 +7,31 @@ import Home from "./pages/Home";
 import Projects from "./pages/ProjectsPage";
 import NavContainer from "./containers/NavContainer";
 import DashboardContainer from "./containers/DashboardContainer";
-import ProjectDetails from "./pages/ProjectDetails";
+import Overview from "./pages/Overview";
+import './app.css';
 
 function App() {
   return (
     <>
+    <div className='app'>
       <Router>
         <GlobalStyles />
+        <NavContainer/>
+        <div className='app__body'>
+        <DashboardContainer/>
+          <div className='body__component'>
         <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-          <Route exact path="/signin">
-            <Signin />
-          </Route>
-          <Route exact path="/signup">
-            <Signup />
-          </Route>
-          <Route exact path="/reset">
-            <Reset />
-          </Route>
-          <Route exact path="/projects">
-            <Projects />
-          </Route>
-          <Route path="/:id">
-            <ProjectDetails/>
-          </Route>
+          <Route exact path="/" component={Home}/>
+          <Route path="/signin" component={Signin}/>
+          <Route path="/signup" component={Signup}/>
+          <Route path="/reset" component={Reset}/>
+          <Route path="/projects" component={Projects}/>
+          <Route path="/overview" component={Overview}/>
         </Switch>
+        </div>
+        </div>
       </Router>
+      </div>
     </>
   );
 }

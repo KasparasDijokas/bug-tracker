@@ -37,9 +37,9 @@ const NavContainer = (props) => {
       </Nav.Header>
       <Nav.Body showNav={showNav}>
         {!showNav ? (
-          <i class="fas fa-angle-double-left" onClick={tabletNavHandler}></i>
+          <i className="fas fa-angle-double-left" onClick={tabletNavHandler}></i>
         ) : (
-          <i class="far fa-times-circle" onClick={tabletNavHandler}></i>
+          <i className="far fa-times-circle" onClick={tabletNavHandler}></i>
         )}
         {/* <Nav.TextLink to="/organizations">My Organizations</Nav.TextLink> */}
         <Nav.TextLink to="/projects">My Projects</Nav.TextLink>
@@ -51,7 +51,7 @@ const NavContainer = (props) => {
           <img src={user} alt="user" />
           <Nav.TextLink to="/profile">My Profile</Nav.TextLink>
           <Nav.TextLink to="/signin">
-            <i class="fas fa-sign-out-alt"></i>
+            <i className="fas fa-sign-out-alt"></i>
           </Nav.TextLink>
         </Nav.Wrapper>
       </Nav.Body>

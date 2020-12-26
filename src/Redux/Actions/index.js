@@ -1,6 +1,4 @@
-import firebase from "../../config/firebase";
 import * as TYPES from "../../constants/actions";
-import { useState, useEffect } from "react";
 
 export const createUser = (user) => {
   return {
@@ -13,42 +11,18 @@ export const createUser = (user) => {
   };
 };
 
-export const showModal = () => {
+export const showModal = (project) => {
   return {
-    type: TYPES.SHOW_MODAL,
+    type: TYPES.SHOW_MODAL
   };
 };
 
-
-
-export const syncProjects = () => {
-  return (dispatch, getState) => {
-    // const allProjects = [];
-    //     const db = firebase.firestore()
-    //     db.collection("projects")
-    //     .onSnapshot(function(doc) {
-    //         doc.forEach((userDoc) => {
-    //             const project = userDoc.data();
-    //             allProjects.push(project)
-    //         })
-    //     })
-    const db = firebase.firestore()
-    const projectsReference = db.collection("projects");
-    projectsReference.get().then((querySnapshot) => {
-      const allProjects = [];
-      querySnapshot.forEach((userDoc) => {
-        const project = userDoc.data();
-        allProjects.push(project);
-      });
-
-      dispatch({
-        type: TYPES.SYNC_PROJECTS,
-        payload: {
-          userProjects: allProjects,
-        },
-      });
-    });
-
-
-  };
-};
+export const saveCurrentProject = (project) => {
+  // console.log(project);
+  return {
+    type: TYPES.SAVE_CURRENT_PROJECT,
+    payload: {
+      ...project
+    }
+  }
+}

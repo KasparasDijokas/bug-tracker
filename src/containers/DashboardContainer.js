@@ -11,12 +11,12 @@ const DashboardContainer = () => {
         {!openDashboad ? (
           <i
             onClick={() => setOpenDashboard(!openDashboad)}
-            class="fas fa-chevron-right"
+            className="fas fa-chevron-right"
           ></i>
         ) : (
           <i
             onClick={() => setOpenDashboard(!openDashboad)}
-            class="far fa-times-circle"
+            className="far fa-times-circle"
           ></i>
         )}
         <img src={logo} alt="logo" />
@@ -25,33 +25,33 @@ const DashboardContainer = () => {
           You are <span>Owner(props)</span>
         </p>
       </Dashboard.Summary>
-      <Dashboard.Link exact to="/overview">
+      <Dashboard.Link to="/overview">
         <span>
-          <i class="fab fa-buffer"></i>
+          <i className="fab fa-buffer"></i>
         </span>
         Project Overview
       </Dashboard.Link>
-      <Dashboard.Link exact to="/users">
+      <Dashboard.Link to="/users">
         <span>
-          <i class="fas fa-users"></i>
+          <i className="fas fa-users"></i>
         </span>
         Project Users
       </Dashboard.Link>
-      <Dashboard.Link exact to="/roles">
+      <Dashboard.Link to="/roles">
         <span>
-          <i class="fas fa-user-plus"></i>
+          <i className="fas fa-user-plus"></i>
         </span>
         Role Assignment
       </Dashboard.Link>
-      <Dashboard.Link exact to="/issues">
+      <Dashboard.Link to="/issues">
         <span>
-          <i class="fas fa-bug"></i>
+          <i className="fas fa-bug"></i>
         </span>
         Issues
       </Dashboard.Link>
-      <Dashboard.Link exact to="/settings">
+      <Dashboard.Link to="/settings">
         <span>
-          <i class="fas fa-cog"></i>
+          <i className="fas fa-cog"></i>
         </span>
         Settings
       </Dashboard.Link>

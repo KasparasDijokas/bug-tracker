@@ -14,6 +14,14 @@ const GlobalStyle = createGlobalStyle`
   a {
     text-decoration: none;
   }
+
+  li {
+    list-style-type: none;
+  }
+
+  input:focus{
+    outline: none;
+}
 `;
 
 export default GlobalStyle;
