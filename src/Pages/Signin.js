@@ -1,11 +1,11 @@
 import React, {useState} from "react";
 import { Form } from "../components";
-import FormImage from "../Images/login.png";
-import firebase from "../Config/firebase";
-import * as ROUTES from "../Constants/routes";
+import FormImage from "../images/login.png";
+import firebase from "../config/firebase";
+import * as ROUTES from "../constants/routes";
 import { useHistory } from "react-router-dom";
 
-const FormContainer = () => {
+const Signin = () => {
 const history = useHistory();
   const [userInput, setUserInput] = useState({
     email: "",
@@ -81,4 +81,4 @@ const history = useHistory();
   );
 };
 
-export default FormContainer;
+export default Signin;

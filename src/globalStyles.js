@@ -8,11 +8,20 @@ const GlobalStyle = createGlobalStyle`
     margin: 0;
     padding: 0;
     font-family: Open-Sans, Helvetica, Sans-Serif;
+    background-color: #f4f5f6;
   }
 
   a {
     text-decoration: none;
   }
+
+  li {
+    list-style-type: none;
+  }
+
+  input:focus{
+    outline: none;
+}
 `;
 
 export default GlobalStyle;
