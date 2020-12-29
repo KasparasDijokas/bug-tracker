@@ -37,6 +37,7 @@ function Modal(props) {
       .collection("projects")
       .add({
         ...project,
+        members: [],
         projectId: '',
         projectAuthor: displayName,
         createdAt: new Date().toDateString()
