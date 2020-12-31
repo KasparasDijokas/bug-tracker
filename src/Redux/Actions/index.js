@@ -17,8 +17,13 @@ export const showModal = (project) => {
   };
 };
 
+export const showEmailModal = (project) => {
+  return {
+    type: TYPES.SHOW_EMAIL_MODAL
+  };
+};
+
 export const saveCurrentProject = (project) => {
-  // console.log(project);
   return {
     type: TYPES.SAVE_CURRENT_PROJECT,
     payload: {

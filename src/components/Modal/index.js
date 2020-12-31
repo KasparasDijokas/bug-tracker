@@ -37,6 +37,7 @@ function Modal(props) {
       .collection("projects")
       .add({
         ...project,
+        members: [],
         projectId: '',
         projectAuthor: displayName,
         createdAt: new Date().toDateString()
@@ -51,7 +52,6 @@ function Modal(props) {
     }
 
   const cancelModal = (e) => {
-    console.log(e);
     e.preventDefault();
     props.showModal();
   };

@@ -8,7 +8,6 @@ import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 const ProjectSummary = ({ currentProject, id }) => {
-  console.log(currentProject)
   const firestore = useFirestore();
   const history = useHistory();
 

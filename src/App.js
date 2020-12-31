@@ -6,9 +6,8 @@ import Reset from "./pages/Reset";
 import Home from "./pages/Home";
 import Projects from "./pages/ProjectsPage";
 import NavContainer from "./containers/NavContainer";
-import DashboardContainer from "./containers/DashboardContainer";
 import Overview from "./pages/Overview";
-import './app.css';
+import Members from "./pages/Members";
 
 function App() {
   return (
@@ -17,9 +16,6 @@ function App() {
       <Router>
         <GlobalStyles />
         <NavContainer/>
-        <div className='app__body'>
-        <DashboardContainer/>
-          <div className='body__component'>
         <Switch>
           <Route exact path="/" component={Home}/>
           <Route path="/signin" component={Signin}/>
@@ -27,9 +23,8 @@ function App() {
           <Route path="/reset" component={Reset}/>
           <Route path="/projects" component={Projects}/>
           <Route path="/overview" component={Overview}/>
+          <Route path="/members" component={Members}/>
         </Switch>
-        </div>
-        </div>
       </Router>
       </div>
     </>

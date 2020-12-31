@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { Form } from "../components/index";
 import loginImage from "../images/login.png";
-import { createUser } from "../Redux/Actions";
-import { connect } from "react-redux";
 import firebase from "../config/firebase";
-import { useHistory } from "react-router-dom";
 import * as ROUTES from "../constants/routes";
+import { useFirestore } from "react-redux-firebase";
+import { withRouter } from "react-router";
 
 const Signup = (props) => {
-  const history = useHistory();
+  const firestore = useFirestore();
+
   const [userInput, setUserInput] = useState({
     email: "",
     name: "",
@@ -34,16 +34,29 @@ const Signup = (props) => {
         firebase
           .auth()
           .currentUser.updateProfile({
-            displayName: userInput.name,
-            photoURL: "",
+            displayName: userInput.name
           })
-          .then(function () {
-            // Update successful.
+          .then(() => {
+            const user = firebase.auth().currentUser;
+            firestore
+            .collection('members')
+            .add({
+              userName: user.displayName,
+              userEmail: user.email,
+              role: '',
+              createdAt: Date.now(),
+              projects: {},
+            })
+            .then((docRef) => {
+              docRef.update({
+                memberId: docRef.id
+              });
+            });
           })
           .catch(function (error) {
             setError(error.message);
           });
-        history.push(ROUTES.HOME);
+        props.history.push(ROUTES.HOME);
       })
       .catch((error) => {
         setError(error.message);
@@ -104,10 +117,4 @@ const Signup = (props) => {
   );
 };
 
-// const mapStateToProps = (state) => {
-//   return {
-
-//   }
-// }
-
-export default connect(null, { createUser })(Signup);
+export default withRouter(Signup);

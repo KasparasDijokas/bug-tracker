@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Dashboard } from "../components";
 import logo from "../images/logo_main.png";
-import GetCurrentProject from '../helper/GetCurrentProject';
+import {useSelector} from 'react-redux';
 
 const DashboardContainer = () => {
   const [openDashboad, setOpenDashboard] = useState(false);
-  const currentProject = GetCurrentProject();
+  const {displayName, email} = useSelector(state => state.firebase.auth);
 
   return (
     <Dashboard show={openDashboad}>
@@ -21,41 +21,23 @@ const DashboardContainer = () => {
             className="far fa-times-circle"
           ></i>
         )}
-        <img src={logo} alt="logo" />
-        {/* <h1>{currentProject.title} project</h1> */}
+        {/* <img src={logo} alt="logo" /> */}
+        <h1>{displayName}</h1>
         <p>
-          You are <span>Owner</span>
+          {email}
         </p>
       </Dashboard.Summary>
-      <Dashboard.Link to="/overview">
+      <Dashboard.Link to="/projects">
         <span>
           <i className="fab fa-buffer"></i>
         </span>
-        Project Overview
+        Projects
       </Dashboard.Link>
-      <Dashboard.Link to="/members">
+      <Dashboard.Link exact to="/signin">
         <span>
-          <i className="fas fa-users"></i>
+        <i className="fas fa-sign-out-alt"></i>
         </span>
-        Project Members
-      </Dashboard.Link>
-      <Dashboard.Link to="/roles">
-        <span>
-          <i className="fas fa-user-plus"></i>
-        </span>
-        Role Assignment
-      </Dashboard.Link>
-      <Dashboard.Link to="/issues">
-        <span>
-          <i className="fas fa-bug"></i>
-        </span>
-        Issues
-      </Dashboard.Link>
-      <Dashboard.Link to="/settings">
-        <span>
-          <i className="fas fa-cog"></i>
-        </span>
-        Settings
+        Sign out
       </Dashboard.Link>
     </Dashboard>
   );
