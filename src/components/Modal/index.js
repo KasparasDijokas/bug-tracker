@@ -52,7 +52,6 @@ function Modal(props) {
     }
 
   const cancelModal = (e) => {
-    console.log(e);
     e.preventDefault();
     props.showModal();
   };

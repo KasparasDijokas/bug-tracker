@@ -1,45 +1,57 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "./members.module.css";
 import Button from "../Button";
 import MemberCard from "../MemberCard/MemberCard";
-import Fuse from 'fuse.js'
-import {useSelector} from 'react-redux';
-import {useFirestoreConnect} from 'react-redux-firebase';
-import GetCurrentProject from '../../helper/GetCurrentProject';
+import Fuse from "fuse.js";
+import EmailModal from "../EmailModal";
+import { showEmailModal } from "../../Redux/Actions";
+import { connect } from "react-redux";
 
-const Members = ({members}) => {
-  const currentProject = GetCurrentProject();
-  const user = useSelector(state => {
-    return state.firebase.auth;
-  })
+const Members = ({ members, emailModal, showEmailModal }) => {
+  const [searchInput, setSearchInput] = useState("");
 
-  const list = ["Old Man's War", 'The Lock Artist'];
+  // create list array (all members) to use it with fuse.js
+  let list = [];
+  if (members) {
+    Object.keys(members).map((id) => {
+      list.push(members[id]);
+    });
+  }
+  // fuse.js
   const options = {
-    includeScore: true
-  }
+    includeScore: true,
+    threshold: 0.1,
+    keys: ["userName", "userEmail"],
+  };
   const fuse = new Fuse(list, options);
-  const result = fuse.search('od man');
+  const result = fuse.search(searchInput);
 
-  const newMemberHandler = (e) => {
-    e.preventDefault();
-
+  if (result.length > 0) {
+    let newList = [];
+    result.map((el) => {
+      newList.push(el.item);
+    });
+    list = [...newList];
   }
-
-  useSelector(state => {
-    // console.log(state);
-  })
 
   return (
     <div className={styles.container}>
+      {emailModal && <EmailModal />}
       <div className={styles.header}>
         <h2>Project Members</h2>
         <div>
-          <input type="text" name="search" id="search" placeholder="Search" />
+          <input
+            type="text"
+            name="search"
+            id="search"
+            placeholder="Search"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+          />
           <label htmlFor="search">
             <i className="fas fa-search"></i>
           </label>
-          <Button>Invite Members</Button>
-          <Button error onClick={newMemberHandler}>Add New Member</Button>
+          <Button onClick={() => showEmailModal()}>Invite Members</Button>
         </div>
       </div>
       <div className={styles.body}>
@@ -50,12 +62,19 @@ const Members = ({members}) => {
           <p>Role</p>
           <p>Assign Member</p>
         </div>
-        {members && Object.keys(members).map(id => {
-         return <MemberCard user={members[id]} key={id}/>
-        })}
+        {list &&
+          list.map((user) => {
+            return <MemberCard user={user} key={user.memberId} />;
+          })}
       </div>
     </div>
   );
 };
 
-export default Members;
+const mapStateToProps = (state) => {
+  return {
+    emailModal: state.emailModal,
+  };
+};
+
+export default connect(mapStateToProps, { showEmailModal })(Members);

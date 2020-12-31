@@ -1,16 +1,12 @@
 import React, { useState } from "react";
 import { Form } from "../components/index";
 import loginImage from "../images/login.png";
-import { createUser } from "../Redux/Actions";
-import { connect } from "react-redux";
 import firebase from "../config/firebase";
-import { useHistory } from "react-router-dom";
 import * as ROUTES from "../constants/routes";
 import { useFirestore } from "react-redux-firebase";
 import { withRouter } from "react-router";
 
 const Signup = (props) => {
-  const history = useHistory();
   const firestore = useFirestore();
 
   const [userInput, setUserInput] = useState({
@@ -42,7 +38,6 @@ const Signup = (props) => {
           })
           .then(() => {
             const user = firebase.auth().currentUser;
-            console.log(user);
             firestore
             .collection('members')
             .add({
@@ -54,7 +49,7 @@ const Signup = (props) => {
             })
             .then((docRef) => {
               docRef.update({
-                projectId: docRef.id
+                memberId: docRef.id
               });
             });
           })
@@ -121,11 +116,5 @@ const Signup = (props) => {
     </Form>
   );
 };
-
-// const mapStateToProps = (state) => {
-//   return {
-
-//   }
-// }
 
 export default withRouter(Signup);

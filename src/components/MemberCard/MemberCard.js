@@ -2,59 +2,54 @@ import React, { useState, useEffect } from "react";
 import styles from "./memberCard.module.css";
 import userImage from "../../images/user.png";
 import Button from "../Button";
-import { useFirestoreConnect } from "react-redux-firebase";
-import {useSelector} from 'react-redux';
-import GetCurrentProject from '../../helper/GetCurrentProject';
+import GetCurrentProject from "../../helper/GetCurrentProject";
 import { useFirestore } from "react-redux-firebase";
 
-const MemberCard = ({ user }) => {
-  console.log(user)
+const MemberCard = ({ user }) => {  
   const currentProject = GetCurrentProject();
   const firestore = useFirestore();
+  const [memberAssigned, setMemberAssigned] = useState(false);
 
-  useFirestoreConnect({
-    collection: 'members' 
-})
+// check if project is already assigned to a user
+  useEffect(() => {
+    if (currentProject && user.projects[currentProject.projectId]) {
+      setMemberAssigned(true);
+    } else {
+      setMemberAssigned(false);
+    }
+  }, [currentProject]);
 
-const members = useSelector(state => {
-    return state.firestore.data.members;
-})
+  const date = new Date(+user.createdAt).toDateString();
 
-const [memberAssigned, setMemberAssigned] = useState(false);
-useEffect(() => {
-  if (members[user.projectId].projects) {
-    setMemberAssigned(true);
-  } else {
-    setMemberAssigned(false)
-  }
-  
-}, [])
-
-if (members) {
-  console.log(members)
-}
-const date = new Date(+user.createdAt.seconds * 1000).toDateString();
-
-const assignMemberHandler = (user) => {
+  // add current project to selected user
+  const assignMemberHandler = (user) => {
     setMemberAssigned(!memberAssigned);
     firestore
-    .collection('members')
-    .doc(user.projectId)
-    .update({
-      projects: {...user.projects, [currentProject.projectId]: currentProject}
-    })
+      .collection("members")
+      .doc(user.memberId)
+      .update({
+        projects: {
+          ...user.projects,
+          [currentProject.projectId]: currentProject,
+        },
+      });
   };
 
+// remove current project from selected user
   const removeUserHandler = (user) => {
     setMemberAssigned(!memberAssigned);
     firestore
-    .collection('members')
-    .doc(user.projectId)
-    .set({ projects : {
-      [currentProject.projectId]: firestore.FieldValue.delete()
-    }
-    }, { merge: true });
-  }
+      .collection("members")
+      .doc(user.memberId)
+      .set(
+        {
+          projects: {
+            [currentProject.projectId]: firestore.FieldValue.delete(),
+          },
+        },
+        { merge: true }
+      );
+  };
 
   if (user) {
     return (
@@ -73,11 +68,14 @@ const assignMemberHandler = (user) => {
           </p>
           {memberAssigned ? (
             <div className={styles.controls}>
-            <i className="far fa-check-circle"></i>
-            <span onClick={() => removeUserHandler(user)}>remove</span>
+              <i className="far fa-check-circle"></i>
+              <span onClick={() => removeUserHandler(user)}>remove</span>
             </div>
           ) : (
-            <Button onClick={() => assignMemberHandler(user)} disabled={memberAssigned}>
+            <Button
+              onClick={() => assignMemberHandler(user)}
+              disabled={memberAssigned}
+            >
               Assign to project
             </Button>
           )}

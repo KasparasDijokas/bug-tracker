@@ -6,3 +6,4 @@ export {default as Button} from './Button';
 export {default as Modal} from './Modal';
 export {default as Members} from './Members/Members';
 export {default as MemberCard} from './MemberCard/MemberCard';
+export {default as EmailModal} from './EmailModal';
