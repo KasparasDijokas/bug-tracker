@@ -1,0 +1,105 @@
+.modal {
+    width: 760px;
+    background: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    padding: 20px;
+    z-index: 3;
+    display: none;
+}
+
+.modal.show {
+    display: block;
+}
+
+.modal__body {
+    display: flex;
+}
+
+.modal__details {
+    display: inline-block;
+    width: 100%;
+    padding: 0 20px 0 0;
+}
+
+/* MODAL HEADER */
+
+.modal__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 0 auto 20px;
+}
+
+.modal__header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.fa-times {
+    cursor: pointer;
+}
+
+
+/* Email NAME */
+
+.email__name {
+    width: 100%;
+    box-shadow: inset 1px 2px 3px rgba(0,0,0,0.08);
+    background: rgb(255, 255, 255);
+    border-radius: 2px;
+    border: 1px solid rgba(0,0,0,0.08);
+    padding: 10px;
+    outline: none;
+    color: #666666;
+}
+
+
+.background {
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0, .7);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    display: none;
+}
+
+.background.show {
+    display: block;
+}
+
+.textarea {
+    width: 100%;
+    box-shadow: inset 1px 2px 3px rgba(0,0,0,0.08);
+    background: rgb(255, 255, 255);
+    border-radius: 2px;
+    border: 1px solid rgba(0,0,0,0.08);
+    padding: 10px;
+    outline: none;
+    color: #666666;
+}
+
+.modal__legend {
+    width: 50%;
+}
+
+.legend__text {
+    padding: 20px;
+    color: #999999;
+    font-style: italic;
+    font-size: 0.875rem;
+}
+
+.buttons {
+    margin-top: 20px;
+}
+
+.buttons button:nth-child(1) {
+    margin-right: 20px;
+}

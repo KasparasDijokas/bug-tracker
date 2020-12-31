@@ -2,8 +2,11 @@ import React from "react";
 import { useFirestoreConnect } from "react-redux-firebase";
 import { useSelector } from "react-redux";
 import ProjectSummary from "../components/ProjectSummary/ProjectSummary";
+import DashboardContainer from '../containers/DashboardContainer';
+import GetCurrentProject from '../helper/GetCurrentProject';
 
 const Overview = (props) => {
+  GetCurrentProject();
   const { email } = useSelector((state) => {
     return state.firebase.auth;
   });
@@ -35,10 +38,17 @@ const Overview = (props) => {
     currentProject = projects[currentProjectId];
   }
 
+  console.log(currentProject);
+
   if (currentProject) {
-    return <ProjectSummary currentProject={currentProject} id={currentProjectId} />;
+    return (
+      <div style={{display: 'flex'}}>
+        <DashboardContainer/>
+        <ProjectSummary currentProject={currentProject} id={currentProjectId} />;
+      </div>
+      ) 
   } else {
-    return <div>/...loading</div>;
+    return <div>Please select project (prideti linka i my projects arba visada rodyt pirmaw)</div>;
   }
 };
 

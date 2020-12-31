@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import authReducer from './authReducer';
 import modalReducer from './modalReducer';
+import emailModalReducer from './emailModalReducer';
 import { firebaseReducer } from 'react-redux-firebase';
 import { firestoreReducer } from 'redux-firestore'; 
 
@@ -9,6 +10,7 @@ export const rootReducer = combineReducers({
   firestore: firestoreReducer, 
   firebase: firebaseReducer,
   auth: authReducer,
-  modal: modalReducer
+  modal: modalReducer,
+  emailModal: emailModalReducer
 });
 
