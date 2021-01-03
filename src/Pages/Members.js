@@ -3,7 +3,6 @@ import { Members } from "../components";
 import DashboardContainer from "../containers/DashboardContainer";
 import { useFirestoreConnect } from "react-redux-firebase";
 import {useSelector} from 'react-redux';
-
 const MembersPage = () => {
     useFirestoreConnect({
         collection: 'members' 
