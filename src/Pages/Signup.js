@@ -37,15 +37,15 @@ const Signup = (props) => {
             displayName: userInput.name
           })
           .then(() => {
-            const user = firebase.auth().currentUser;
+            const currentU = firebase.auth().currentUser;
             firestore
             .collection('members')
             .add({
-              userName: user.displayName,
-              userEmail: user.email,
-              role: '',
+              userName: currentU.displayName,
+              userEmail: currentU.email,
               createdAt: Date.now(),
               projects: {},
+              userRole: ''
             })
             .then((docRef) => {
               docRef.update({

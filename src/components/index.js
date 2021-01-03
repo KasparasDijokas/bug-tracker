@@ -7,3 +7,5 @@ export {default as Modal} from './Modal';
 export {default as Members} from './Members/Members';
 export {default as MemberCard} from './MemberCard/MemberCard';
 export {default as EmailModal} from './EmailModal';
+export {default as MembersRoles} from './MembersRoles/MembersRoles';
+export {default as RolesMemberCard} from './RolesMemberCard/RolesMemberCard';

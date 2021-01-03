@@ -37,10 +37,11 @@ function Modal(props) {
       .collection("projects")
       .add({
         ...project,
-        members: [],
+        members: {},
         projectId: '',
         projectAuthor: displayName,
-        createdAt: new Date().toDateString()
+        createdAt: new Date().toDateString(),
+        userRole: ''
       })
       .then((docRef) => {
         docRef.update({
