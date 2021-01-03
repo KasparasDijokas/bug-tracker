@@ -1,8 +1,7 @@
-import React, {useEffect} from "react";
+import React from "react";
 import { Project } from "../components";
-import user from "../images/user.png";
+import userImg from "../images/user.png";
 import { Button } from "../components";
-import { Link } from "react-router-dom";
 import ProjectsDashboard from '../containers/ProjectsDashboard';
 import firebase from "../config/firebase";
 // redux
@@ -64,7 +63,7 @@ const ProjectsPage = (props) => {
       <Project>
         <Project.Body>
           <Project.Header>
-            <img src={user} alt="user" />
+            <img src={userImg} alt="user" />
             <Project.Wrapper direction="column">
               <h1>{displayName}</h1>
               <p>Registration date: {registrationDate.toLocaleDateString()}</p>
@@ -85,13 +84,14 @@ const ProjectsPage = (props) => {
               <Button onClick={() => props.showModal()}>
                 Create New Project
               </Button>
+              prideti skilti kurioje rodytu kokius projektus esu sukures ir prie kuriu esu priskirtas
             </Project.ProjectHeader>
             {!projects
               ? ""
               : Object.keys(projects).map((el) => {
                   return (
                     <Project.ProjectCard key={projects[el].projectId}>
-                      <img src={user} alt="user" />
+                      <img src={userImg} alt="user" />
                       <Project.Wrapper direction="column">
                         <div>
                           <h1
