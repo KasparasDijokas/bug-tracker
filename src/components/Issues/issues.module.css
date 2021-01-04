@@ -1,0 +1,62 @@
+.container {
+    width: 90%;
+    background-color: #fff;
+    margin: 10px auto;
+    padding: 12px;
+    border-radius: 5px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    padding-right: 30px;
+}
+
+.header div {
+    display: flex;
+    align-items: center;
+}
+
+.header input {
+    height: 30px;
+    line-height: 20px;
+    color: #666666;
+    background: #ffffff;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    box-shadow: inset 1px 2px 3px rgba(0,0,0,0.08);
+    padding-left: 10px;
+}
+
+.header i {
+    color: #999999;
+    font-size: 1.125rem;
+    margin: 0 24px 0 8px;
+}
+
+.header button:last-of-type {
+    margin-left: 12px;
+}
+
+.legend {
+    display: flex;
+    justify-content: space-between;
+}
+
+/* ISSUES  */
+
+.issues__header {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0 10px;
+    padding-top: 10px;
+    border-top: 1px solid #666;
+}
+
+.issues__container {
+    display: flex;
+    justify-content: space-between;
+}
+

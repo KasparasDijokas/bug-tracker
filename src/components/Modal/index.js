@@ -41,6 +41,7 @@ function Modal(props) {
         projectId: '',
         projectAuthor: displayName,
         createdAt: new Date().toDateString(),
+        issues: [],
         userRole: ''
       })
       .then((docRef) => {

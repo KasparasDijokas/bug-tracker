@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 
 const MemberCard = ({ user }) => {
   const currentProject = GetCurrentProject();
+  console.log(currentProject);
   const firestore = useFirestore();
   const [memberAssigned, setMemberAssigned] = useState(false);
   const [role, setRole] = useState(false);

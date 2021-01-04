@@ -9,3 +9,6 @@ export {default as MemberCard} from './MemberCard/MemberCard';
 export {default as EmailModal} from './EmailModal';
 export {default as MembersRoles} from './MembersRoles/MembersRoles';
 export {default as RolesMemberCard} from './RolesMemberCard/RolesMemberCard';
+export {default as Issues} from './Issues/Issues';
+export {default as DragNDrop} from './DragNDrop/DragNDrop';
+export {default as IssuesModal} from './IssuesModal/IssuesModal';
