@@ -14,6 +14,7 @@ const Issues = ({ showIssuesModal, issuesModalState, currentProject }) => {
   const firestore = useFirestore();
   const [bugStatus, setBugStatus] = useState('all');
   const [currentBug, setCurrentBug] = useState(null);
+  console.log(bugStatus);
 
   function openModal(bug) {
     setCurrentBug(bug);
@@ -35,9 +36,9 @@ const Issues = ({ showIssuesModal, issuesModalState, currentProject }) => {
         [`issues.${bug.status}`]: firestore.FieldValue.arrayRemove(bug)
         // [`issues`].filter(el => el.id === bug.id)
       }).then(() => { // => delete bug from members collection
-        firestore.collection(`members`).doc(email).update({ 
-          [`projects.${currentProject.projectId}.issues`]: firestore.FieldValue.arrayRemove(bug)
-        })
+        // firestore.collection(`members`).doc(email).update({ 
+        //   [`projects.${currentProject.projectId}.issues`]: firestore.FieldValue.arrayRemove(bug)
+        // })
       })
       .then(() => {
         bug.status = el; // => change bug status
@@ -46,9 +47,9 @@ const Issues = ({ showIssuesModal, issuesModalState, currentProject }) => {
           [`issues.${el}`]: firestore.FieldValue.arrayUnion(bug)
         })
       }).then(() => { // => push updated bug to members/issues array
-        firestore.collection('members').doc(email).update({
-          [`projects.${currentProject.projectId}.issues`]: firestore.FieldValue.arrayUnion(bug)
-      })
+      //   firestore.collection('members').doc(email).update({
+      //     [`projects.${currentProject.projectId}.issues`]: firestore.FieldValue.arrayUnion(bug)
+      // })
       })
   };
 
@@ -57,9 +58,9 @@ const Issues = ({ showIssuesModal, issuesModalState, currentProject }) => {
       [`issues.${bug.status}`]: firestore.FieldValue.arrayRemove(bug)
       // [`issues.${bug.status}`].filter(el => el.id === bug.id)
     }).then(() => {
-      firestore.collection(`members`).doc(email).update({
-        [`projects.${currentProject.projectId}.issues`]: firestore.FieldValue.arrayRemove(bug)
-      })
+      // firestore.collection(`members`).doc(email).update({
+      //   [`projects.${currentProject.projectId}.issues`]: firestore.FieldValue.arrayRemove(bug)
+      // })
     })
   }
 
@@ -73,8 +74,7 @@ const Issues = ({ showIssuesModal, issuesModalState, currentProject }) => {
     ['In progress']: false,
   });
 
-  console.log(buttonState);
-
+  
   useFirestoreConnect({
     collection: `members`,
     storeAs: "members",
@@ -82,7 +82,10 @@ const Issues = ({ showIssuesModal, issuesModalState, currentProject }) => {
   const members = useSelector((state) => {
     return state.firestore.data.members;
   });
+ 
 
+
+  
   const buttonStateHandler = (e) => {
     console.log(e.target.id);
     setButtonState({
@@ -92,11 +95,17 @@ const Issues = ({ showIssuesModal, issuesModalState, currentProject }) => {
   };
 
   let issuesLength = 0;
+  const userBugs = [];
   Object.keys(currentProject.issues).map(el => {
-      return issuesLength += currentProject.issues[el].length;
+      issuesLength += currentProject.issues[el].length;
+      currentProject.issues[el].map(bug => {
+        if (bug.assign === email) {
+          userBugs.push(bug)
+        }
+      })
     })
 
-  if (currentProject && members) {
+  if (currentProject && members && email) {
     return (
       <>
        {/* <div >
@@ -149,7 +158,7 @@ const Issues = ({ showIssuesModal, issuesModalState, currentProject }) => {
               onClick={(e) => buttonStateHandler(e)}
               btnState={buttonState[email]}
             >
-              Assigned to me ({members[email].projects[currentProject.projectId].issues.length})
+              Assigned to me ({userBugs.length})
             </Button>
             <Button
               id="To do"
@@ -182,8 +191,7 @@ const Issues = ({ showIssuesModal, issuesModalState, currentProject }) => {
                     onDrop={(e) => handleOnDrop(e, el)}
                   >
                     {currentProject.issues[el].map((bug, index) => {
-                      // console.log(bug);
-                      if (bug.status === bugStatus || bugStatus === 'all' || bugStatus === email) {
+                      if (bug.status === bugStatus || bugStatus === 'all' || bugStatus === bug.assign) {
                         return (
                           <Bug
                             key={bug.id}

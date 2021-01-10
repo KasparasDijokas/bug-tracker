@@ -6,11 +6,11 @@ import {Button} from '../components';
 import {connect} from 'react-redux';
 import {showModal} from '../Redux/Actions';
 import {Modal} from '../components';
+import firebase from '../config/firebase';
+import {useHistory} from 'react-router-dom';
 
 const NavContainer = (props) => {
-  // const addOrganizationHandler = () => {
-  //   console.log("add organization");
-  // };
+  const history = useHistory();
 
   const addProjectHandler = (e) => {
     console.log('show modal');
@@ -26,6 +26,14 @@ const NavContainer = (props) => {
   const tabletNavHandler = () => {
     setShowNav(!showNav);
   };
+
+  const signOutHandler = () => {
+    firebase.auth().signOut().then(() => {
+      history.push('/signup')
+    }).catch((error) => {
+      // An error happened.
+    });
+  }
 
   return (
     <>
@@ -51,7 +59,7 @@ const NavContainer = (props) => {
           <img src={user} alt="user" />
           <Nav.TextLink to="/profile">My Profile</Nav.TextLink>
           <Nav.TextLink to="/signin">
-            <i className="fas fa-sign-out-alt"></i>
+            <i className="fas fa-sign-out-alt" onClick={signOutHandler}></i>
           </Nav.TextLink>
         </Nav.Wrapper>
       </Nav.Body>

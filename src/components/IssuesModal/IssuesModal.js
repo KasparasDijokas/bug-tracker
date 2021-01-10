@@ -39,7 +39,7 @@ function IssuesModal(props) {
     assign: Object.keys(members)[0],
     type: "",
     priority: '',
-    status: '',
+    status: 'To do',
     object: "",
     issuesAuthor: email,
     id: uuid()
@@ -50,9 +50,9 @@ useEffect(() => {
      title: props.currentBug ? props.currentBug.title : '',
      summary: props.currentBug ? props.currentBug.summary : '',
      assign: props.currentBug ? props.currentBug.assign : Object.keys(members)[0],
-     type: props.currentBug ? props.currentBug.type : '',
+     type: props.currentBug ? props.currentBug.type : 'Documentation',
      priority: props.currentBug ? props.currentBug.priority : '',
-     status: props.currentBug ? props.currentBug.status : '',
+     status: props.currentBug ? props.currentBug.status : 'To do',
      object: "",
      issuesAuthor: email,
      id: uuid()
@@ -126,13 +126,13 @@ console.log(userInput);
           // assign issue to user
           // userInput.assign &&
           console.log(userInput.assign);
-          firestore.collection('members').doc(userInput.assign).update({
-              [`projects.${props.currentProject.projectId}.issues`]: firestore.FieldValue.arrayRemove(bug)
-          })
+          // firestore.collection('members').doc(userInput.assign).update({
+          //     [`projects.${props.currentProject.projectId}.issues.${userInput.status}`]: firestore.FieldValue.arrayRemove(bug)
+          // })
       }).then(() => {
-        firestore.collection('members').doc(userInput.assign).update({
-          [`projects.${props.currentProject.projectId}.issues`]: firestore.FieldValue.arrayUnion(userInput)
-      })
+      //   firestore.collection('members').doc(userInput.assign).update({
+      //     [`projects.${props.currentProject.projectId}.issues.${userInput.status}`]: firestore.FieldValue.arrayUnion(userInput)
+      // })
       })
     setuserInput({
       ...userInput,

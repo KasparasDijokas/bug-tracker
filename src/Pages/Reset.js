@@ -9,7 +9,6 @@ const FormContainer = () => {
   const history = useHistory();
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
-
   const [email, setEmail] = useState("");
 
   const userInputHandler = (e) => {
@@ -59,7 +58,7 @@ const FormContainer = () => {
             ) : (
               <>
                 <Form.Span>Back to</Form.Span>{" "}
-                <Form.LinkEl to="reset">Login page ?</Form.LinkEl>{" "}
+                <Form.LinkEl to="signin">Login page ?</Form.LinkEl>{" "}
               </>
             )}
           </Form.Frame>

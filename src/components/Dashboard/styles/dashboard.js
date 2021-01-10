@@ -107,3 +107,29 @@ span {
 }
 
 `;
+
+
+export const Route = styled.p`
+display: block;
+padding: 17px 15px;
+color: rgba(255,255,255,0.8);
+text-transform: capitalize;
+font-size: 1rem;
+border-left: 4px solid transparent;
+margin: 0;
+
+&.active {
+    background-color: #243746;
+    border-left: 4px solid #28bd8b;
+}
+
+&:hover {
+    background-color: #243746;
+    border-left: 4px solid #28bd8b;
+}
+
+span {
+    padding-right: 15px;
+}
+
+`;

@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import { Dashboard } from "../components";
-import logo from "../images/logo_main.png";
 import {useSelector} from 'react-redux';
+import firebase from '../config/firebase';
+import {useHistory} from 'react-router-dom'
 
 const DashboardContainer = () => {
+  const history = useHistory();
   const [openDashboad, setOpenDashboard] = useState(false);
   const {displayName, email} = useSelector(state => state.firebase.auth);
+
+  const signOutHandler = () => {
+    firebase.auth().signOut().then(() => {
+      history.push('/signin')
+    })
+  }
 
   return (
     <Dashboard show={openDashboad}>
@@ -21,7 +29,6 @@ const DashboardContainer = () => {
             className="far fa-times-circle"
           ></i>
         )}
-        {/* <img src={logo} alt="logo" /> */}
         <h1>{displayName}</h1>
         <p>
           {email}
@@ -33,12 +40,12 @@ const DashboardContainer = () => {
         </span>
         Projects
       </Dashboard.Link>
-      <Dashboard.Link exact to="/signin">
+      <Dashboard.Route onClick={signOutHandler}>
         <span>
         <i className="fas fa-sign-out-alt"></i>
         </span>
         Sign out
-      </Dashboard.Link>
+      </Dashboard.Route>
     </Dashboard>
   );
 };

@@ -1,4 +1,4 @@
-import {Container, Inner, Summary, Link} from './styles/dashboard';
+import {Container, Inner, Summary, Link, Route} from './styles/dashboard';
 
 export default function Dashboard({children, ...restProps}) {
     return (
@@ -14,4 +14,8 @@ Dashboard.Summary = function DashboardSummary({children, ...restProps}) {
 
 Dashboard.Link = function DashboardLink({children, ...restProps}) {
     return <Link {...restProps}>{children}</Link>
+}
+
+Dashboard.Route = function DashboardRoute({children, ...restProps}) {
+    return <Route {...restProps}>{children}</Route>
 }
