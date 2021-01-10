@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 
 const MemberCard = ({ user }) => {
   const currentProject = GetCurrentProject();
+  console.log(currentProject);
   const firestore = useFirestore();
   const [memberAssigned, setMemberAssigned] = useState(false);
   const [role, setRole] = useState(false);
@@ -32,7 +33,7 @@ const MemberCard = ({ user }) => {
     setMemberAssigned(!memberAssigned);
     firestore
       .collection("members")
-      .doc(user.memberId)
+      .doc(email)
       .update({
         projects: {
           ...user.projects,
@@ -43,14 +44,15 @@ const MemberCard = ({ user }) => {
         // update current Project 'members' field with assigned user
         firestore
           .collection("members")
-          .doc(user.memberId)
+          .doc(email)
           .get()
           .then((doc) => {
+            console.log(doc.data());
             firestore
               .collection(`users/${email}/projects`)
               .doc(currentProject.projectId)
               .update({
-                [`members.${user.memberId}`]: doc.data(),
+                members: firestore.FieldValue.arrayUnion(doc.data())
               });
           });
       });
@@ -61,7 +63,7 @@ const MemberCard = ({ user }) => {
     setMemberAssigned(!memberAssigned);
     firestore
       .collection("members")
-      .doc(user.memberId)
+      .doc(email)
       .set(
         {
           projects: {
@@ -77,7 +79,7 @@ const MemberCard = ({ user }) => {
           .set(
             {
               members: {
-                [user.memberId]: firestore.FieldValue.delete(),
+                [email]: firestore.FieldValue.delete(),
               },
             },
             { merge: true }

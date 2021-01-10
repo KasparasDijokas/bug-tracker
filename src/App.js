@@ -9,6 +9,7 @@ import NavContainer from "./containers/NavContainer";
 import Overview from "./pages/Overview";
 import Members from "./pages/Members";
 import RolesPage from "./pages/Roles";
+import IssuesPage from "./pages/Issues";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
           <Route path="/overview" component={Overview}/>
           <Route path="/members" component={Members}/>
           <Route path="/roles" component={RolesPage}/>
+          <Route path="/issues" component={IssuesPage}/>
         </Switch>
       </Router>
       </div>

@@ -39,19 +39,15 @@ const Signup = (props) => {
           .then(() => {
             const currentU = firebase.auth().currentUser;
             firestore
-            .collection('members')
-            .add({
+            .collection(`members`)
+            .doc(currentU.email)
+            .set({
               userName: currentU.displayName,
               userEmail: currentU.email,
               createdAt: Date.now(),
               projects: {},
               userRole: ''
             })
-            .then((docRef) => {
-              docRef.update({
-                memberId: docRef.id
-              });
-            });
           })
           .catch(function (error) {
             setError(error.message);
