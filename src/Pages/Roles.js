@@ -17,6 +17,7 @@ const RolesPage = () => {
     // })
 
 if (currentProject) {
+  console.log(currentProject.members);
   return (
     <div style={{ display: "flex" }}>
       <DashboardContainer />

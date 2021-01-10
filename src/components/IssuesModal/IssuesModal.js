@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import styles from "./issuesModal.module.css";
 import Button from "../Button";
@@ -6,12 +6,12 @@ import { showIssuesModal } from "../../Redux/Actions";
 import { useFirestore } from "react-redux-firebase";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect } from "react-redux-firebase";
-
+import uuid from "react-uuid";
 
 function IssuesModal(props) {
   const firestore = useFirestore();
-
-
+  const bug = props.currentBug ? props.currentBug : null;
+  
   const { email } = useSelector((state) => {
     return state.firebase.auth;
   });
@@ -23,29 +23,47 @@ function IssuesModal(props) {
   const members = useSelector((state) => {
     return state.firestore.data.members;
   });
-  console.log(members);
 //   useFirestoreConnect({
-//     collection: `users/${email}/projects`,
+  //     collection: `users/${email}/projects`,
 //     storeAs: "projects",
 //   });
 //   const projects = useSelector((state) => {
-//     return state.firestore.data.projects;
+  //     return state.firestore.data.projects;
 //   });
 
+
+
   const [userInput, setuserInput] = useState({
-    summary: "",
-    assign: "",
+    title: '',
+    summary: '',
+    assign: Object.keys(members)[0],
     type: "",
-    priority: "",
-    status: "",
+    priority: '',
+    status: '',
     object: "",
     issuesAuthor: email,
+    id: uuid()
   });
+
+useEffect(() => {
+    setuserInput({
+     title: props.currentBug ? props.currentBug.title : '',
+     summary: props.currentBug ? props.currentBug.summary : '',
+     assign: props.currentBug ? props.currentBug.assign : Object.keys(members)[0],
+     type: props.currentBug ? props.currentBug.type : '',
+     priority: props.currentBug ? props.currentBug.priority : '',
+     status: props.currentBug ? props.currentBug.status : '',
+     object: "",
+     issuesAuthor: email,
+     id: uuid()
+   })
+}, [props.currentBug])
+console.log(userInput);
+
   const [selectColor, setSelectColor] = useState("#bdbdbd");
   const [priorityColor, setPriorityColor] = useState("#0277bd");
 
   const formHandler = (e) => {
-      console.log(e.target.value);
     switch (e.target.value) {
       case "Documentation":
         setSelectColor("#bdbdbd");
@@ -77,6 +95,12 @@ function IssuesModal(props) {
       case "Critical":
         setPriorityColor("#e57373");
         break;
+      case "In progress":
+      case "To do":
+      case "Submitted":
+      case "Done":
+      case "Object":
+        break;  
       default:
         setSelectColor("#fff");
     }
@@ -84,24 +108,39 @@ function IssuesModal(props) {
       ...userInput,
       [e.target.name]: e.target.value,
     });
+
   };
 
   const addNewIssue = () => {
-    firestore
-      .collection("users")
-      .doc(email)
-      .collection("projects")
-      .doc(props.currentProject.projectId) // => currentProject
-      .update({
-        issues: firestore.FieldValue.arrayUnion(userInput),
-        // dar reikia update memebers projects/issues -- ar rodyti tik tas kurias jam priskiria?
-      }).then(() => {
-          // assign issue to user
-          firestore.collection('members').doc(userInput.assign).update({
-              [`projects.${props.currentProject.projectId}.issues`]: firestore.FieldValue.arrayUnion(userInput)
-          })
+    const db = firestore.collection("users").doc(email).collection("projects").doc(props.currentProject.projectId); // => currentProject
+    db.update({
+      [`issues.${bug ? bug.status : userInput.status}`]: firestore.FieldValue.arrayRemove(bug),
+    }).then(() => {
+      db.update({
+        [`issues.${userInput.status}`]: firestore.FieldValue.arrayUnion(userInput),
+        // firestore.FieldValue.arrayUnion(userInput)
+        // dar reikia update members projects/issues -- ar rodyti tik tas kurias jam priskiria?
       })
-    setuserInput("");
+    })
+     .then(() => {
+          // assign issue to user
+          // userInput.assign &&
+          console.log(userInput.assign);
+          firestore.collection('members').doc(userInput.assign).update({
+              [`projects.${props.currentProject.projectId}.issues`]: firestore.FieldValue.arrayRemove(bug)
+          })
+      }).then(() => {
+        firestore.collection('members').doc(userInput.assign).update({
+          [`projects.${props.currentProject.projectId}.issues`]: firestore.FieldValue.arrayUnion(userInput)
+      })
+      })
+    setuserInput({
+      ...userInput,
+      title: '',
+      summary: '',
+      type: 'Documentation',
+      id: uuid()
+    });
     props.showIssuesModal();
   };
 
@@ -144,11 +183,12 @@ function IssuesModal(props) {
                       type="text"
                       onChange={formHandler}
                       name="title"
+                      value={userInput.title}
                     ></input>
                   </div>
                   <div className={styles.assign}>
                     <p>Assign to</p>
-                    <select name="assign" onChange={formHandler}>
+                    <select name="assign" onChange={formHandler} defaultValue={userInput.assign}>
                         {Object.keys(members).map(id => {
                             return <option key={id} value={id}>{members[id].userEmail}</option>
                         })}
@@ -165,17 +205,17 @@ function IssuesModal(props) {
                       name="type"
                       onChange={formHandler}
                       style={{ backgroundColor: selectColor }}
-                      defaultValue={'Documentation'}
+                      value={userInput.type}
                     >
                       <option style={{ backgroundColor: "#fff" }}>No type</option>
                       <option value="Documentation" style={{ backgroundColor: "#bdbdbd" }}>
                         Documentation
                       </option>
-                      <option style={{ backgroundColor: "#64b5f6" }}>Task</option>
-                      <option style={{ backgroundColor: "#4db6ac" }}>
+                      <option value="Task" style={{ backgroundColor: "#64b5f6" }}>Task</option>
+                      <option value="Feature" style={{ backgroundColor: "#4db6ac" }}>
                         Feature
                       </option>
-                      <option style={{ backgroundColor: "#9575cd" }}>
+                      <option value="Usability problem" style={{ backgroundColor: "#9575cd" }}>
                         Usability problem
                       </option>
                       <option style={{ backgroundColor: "#e3af5b" }}>Bug</option>
@@ -189,8 +229,9 @@ function IssuesModal(props) {
                       name="priority"
                       onChange={formHandler}
                       style={{ backgroundColor: priorityColor }}
+                      value={userInput.priority}
                     >
-                      <option style={{ backgroundColor: "#0277bd" }}>Low</option>
+                      <option value="Low" style={{ backgroundColor: "#0277bd" }}>Low</option>
                       <option style={{ backgroundColor: "#2e7d32" }}>Medium</option>
                       <option style={{ backgroundColor: "#ff8f00" }}>High</option>
                       <option style={{ backgroundColor: "#c62828" }}>
@@ -201,19 +242,18 @@ function IssuesModal(props) {
     
                   <div className={`${styles.options__bottom__element}`}>
                     <p>Status</p>
-                    <select name="status" onChange={formHandler}>
-                      <option>Submitted</option>
-                      <option>To be discussed</option>
-                      <option>Reopened</option>
+                    <select name="status" onChange={formHandler} value={userInput.status}>
+                      <option value="Submitted">Submitted</option>
+                      <option>To do</option>
                       <option>In progress</option>
+                      <option>Done</option>
                     </select>
                   </div>
     
                   <div className={`${styles.options__bottom__element}`}>
                     <p>Test object</p>
-                    <select name="object" onChange={formHandler}>
+                    <select name="object" onChange={formHandler} value={userInput.object}>
                       <option>object</option>
-                      <option>banana</option>
                     </select>
                   </div>
                 </div>
@@ -221,7 +261,7 @@ function IssuesModal(props) {
     
               <div className={styles.textArea}>
                 <label>Description</label>
-                <textarea name="summary" onChange={formHandler}></textarea>
+                <textarea name="summary" onChange={formHandler} defaultValue={userInput.summary}></textarea>
               </div>
               <div className={styles.buttons}>
                 <Button onClick={addNewIssue}>Save</Button>

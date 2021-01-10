@@ -18,7 +18,7 @@ const RolesMemberCard = ({ user }) => {
   useEffect(() => {
     firestore
       .collection("members")
-      .doc(user.memberId)
+      .doc(email)
       .get()
       .then((doc) => {
         if (user) {
@@ -34,7 +34,7 @@ const RolesMemberCard = ({ user }) => {
     setMemberStatus(!memberStatus);
     firestore
       .collection("members")
-      .doc(user.memberId)
+      .doc(email)
       .set(
         {
           projects: {
@@ -49,7 +49,7 @@ const RolesMemberCard = ({ user }) => {
           .doc(currentProject.projectId)
           .set({
             members: {
-              [user.memberId]: firestore.FieldValue.delete(),
+              [email]: firestore.FieldValue.delete(),
             }
           },
           { merge: true });
@@ -61,13 +61,14 @@ const RolesMemberCard = ({ user }) => {
     setRole(e.target.value);
     firestore
       .collection(`members`)
-      .doc(user.memberId)
+      .doc(email)
       .update({
         [`projects.${currentProject.projectId}.userRole`]: e.target.value,
       });
   };
 
   if (user) {
+    console.log(user);
     return (
       <div className={styles.body__nav}>
         <div className={styles.member__card}>

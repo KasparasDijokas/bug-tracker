@@ -12,8 +12,9 @@ const MembersRoles = ({currentProjectMembers, showEmailModal}) => {
   let list = [];
 
   if (currentProjectMembers) {
-    Object.keys(currentProjectMembers).map((id) => {
-      list.push(currentProjectMembers[id]);
+    currentProjectMembers.map((id) => {
+      console.log(id);
+      list.push(id);
     });
   }
 
@@ -65,7 +66,7 @@ const MembersRoles = ({currentProjectMembers, showEmailModal}) => {
         </div>
         {list &&
           list.map((user) => {
-            return <RolesMemberCard user={user} key={user.memberId} />;
+            return <RolesMemberCard user={user} key={user} />;
           })}
       </div>
     </div>
