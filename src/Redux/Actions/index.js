@@ -28,12 +28,3 @@ export const showIssuesModal = (project) => {
     type: TYPES.SHOW_ISSUES_MODAL
   };
 };
-
-export const saveCurrentProject = (project) => {
-  return {
-    type: TYPES.SAVE_CURRENT_PROJECT,
-    payload: {
-      ...project
-    }
-  }
-}

@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { Dashboard } from "../components";
-import {useSelector} from 'react-redux';
 import firebase from '../config/firebase';
 import {useHistory} from 'react-router-dom'
 
 const DashboardContainer = () => {
   const history = useHistory();
   const [openDashboad, setOpenDashboard] = useState(false);
-  const {displayName, email} = useSelector(state => state.firebase.auth);
+  const user = firebase.auth().currentUser;
 
   const signOutHandler = () => {
     firebase.auth().signOut().then(() => {
@@ -29,9 +28,9 @@ const DashboardContainer = () => {
             className="far fa-times-circle"
           ></i>
         )}
-        <h1>{displayName}</h1>
+        <h1>{user && user.displayName}</h1>
         <p>
-          {email}
+          {user && user.email}
         </p>
       </Dashboard.Summary>
       <Dashboard.Link to="/projects">

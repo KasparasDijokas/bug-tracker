@@ -6,8 +6,10 @@ import Dropzone from "../../components/Dropzone/Dropzone";
 import { showModal } from "../../Redux/Actions";
 import { useFirestore } from "react-redux-firebase";
 import { useSelector } from "react-redux";
+import firebase from '../../config/firebase';
 
 function Modal(props) {
+  const user = firebase.auth().currentUser;
 
   const [userInput, setuserInput] = useState({
     category: "",
@@ -24,22 +26,18 @@ function Modal(props) {
 
   // create project in firestore
   const firestore = useFirestore();
-  // destructure author name and email
-  const { email, displayName } = useSelector((state) => {
-    return state.firebase.auth;
-  });
 
   // add new project
   const addNewProject = (project) => {
     firestore
       .collection("users")
-      .doc(email)
+      .doc(user.email)
       .collection("projects")
       .add({
         ...project,
         members: [],
         projectId: '',
-        projectAuthor: displayName,
+        projectAuthor: user.displayName,
         createdAt: new Date().toDateString(),
         issues: {
           Submitted: [],
@@ -81,10 +79,10 @@ function Modal(props) {
             <div className="options">
               <p>Category</p>
               <select name="category" onChange={formHandler}>
-                <option>DevOp</option>
+                <option>Testing</option>
                 <option>Front-end</option>
                 <option>Back-End</option>
-                <option>UX</option>
+                <option>UI/UX</option>
               </select>
             </div>
             <div className="platform">
@@ -92,7 +90,7 @@ function Modal(props) {
               <div onChange={formHandler}>
                 <input type="radio" name="platform" value="android" />
                 <label htmlFor="android">Android</label>
-                <input type="radio" name="platform" value="apple" />
+                <input type="radio" name="platform" value="iOs" />
                 <label htmlFor="apple">iOS</label>
                 <input type="radio" name="platform" value="web" />
                 <label htmlFor="web">Web</label>

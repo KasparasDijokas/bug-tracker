@@ -14,7 +14,7 @@ const Members = ({ members, emailModal, showEmailModal }) => {
   let list = [];
   if (members) {
     Object.keys(members).map((id) => {
-      list.push(members[id]);
+      return list.push(members[id]);
     });
   }
   // fuse.js
@@ -29,7 +29,7 @@ const Members = ({ members, emailModal, showEmailModal }) => {
   if (result.length > 0) {
     let newList = [];
     result.map((el) => {
-      newList.push(el.item);
+     return newList.push(el.item);
     });
     list = [...newList];
   }
@@ -64,7 +64,7 @@ const Members = ({ members, emailModal, showEmailModal }) => {
         </div>
         {list &&
           list.map((user) => {
-            return <MemberCard user={user} key={user.memberId} />;
+            return <MemberCard user={user} key={user.createdAt} />;
           })}
       </div>
     </div>

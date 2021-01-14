@@ -1,30 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 import { Dashboard } from "../components";
 import logo from "../images/logo_main.png";
-import GetCurrentProject from '../helper/GetCurrentProject';
+import useCurrentProject from '../hooks/useCurrentProject';
+import {useSelector} from 'react-redux';
 
 const DashboardContainer = () => {
-  const [openDashboad, setOpenDashboard] = useState(false);
-  const currentProject = GetCurrentProject();
+  const currentProject = useCurrentProject();
+  const {email} = useSelector(state => state.firebase.auth);
 
   return (
-    <Dashboard show={openDashboad}>
-      <Dashboard.Summary onClick={() => setOpenDashboard(!openDashboad)}>
-        {!openDashboad ? (
-          <i
-            onClick={() => setOpenDashboard(!openDashboad)}
-            className="fas fa-chevron-right"
-          ></i>
-        ) : (
-          <i
-            onClick={() => setOpenDashboard(!openDashboad)}
-            className="far fa-times-circle"
-          ></i>
-        )}
+    <Dashboard>
+      <Dashboard.Summary>
         <img src={logo} alt="logo" />
-        {/* <h1>{currentProject.title} project</h1> */}
+        <h1>{currentProject ? `${currentProject.title} project` : ''}</h1>
         <p>
-          You are <span>Owner</span>
+          <span>{email}</span>
         </p>
       </Dashboard.Summary>
       <Dashboard.Link to="/overview">

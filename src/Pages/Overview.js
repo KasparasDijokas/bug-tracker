@@ -1,10 +1,11 @@
 import React from "react";
 import ProjectSummary from "../components/ProjectSummary/ProjectSummary";
 import DashboardContainer from '../containers/DashboardContainer';
-import GetCurrentProject from '../helper/GetCurrentProject';
+import useCurrentProject from '../hooks/useCurrentProject';
+import {Spinner} from '../components';
 
 const Overview = (props) => {
-  const currentProject = GetCurrentProject();
+  const currentProject = useCurrentProject();
 
   if (currentProject) {
     return (
@@ -14,7 +15,18 @@ const Overview = (props) => {
       </div>
       ) 
   } else {
-    return <div>Please select project (prideti linka i my projects arba visada rodyt pirmaw)</div>;
+    return (
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Spinner />
+      </div>
+    )
   }
 };
 

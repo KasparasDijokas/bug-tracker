@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { showModal } from "../../Redux/Actions";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
+import {Spinner} from '../index';
 
 const ProjectSummary = ({ currentProject, id }) => {
   const firestore = useFirestore();
@@ -15,6 +16,7 @@ const ProjectSummary = ({ currentProject, id }) => {
     return state.firebase.auth;
   });
 
+  // edit projects info
   const handleChange = (e) => {
     firestore
       .collection("users")
@@ -24,11 +26,9 @@ const ProjectSummary = ({ currentProject, id }) => {
       .update({
         [e.target.name]: e.target.value,
       })
-      .catch(function (error) {
-        console.error(error);
-      });
   };
 
+  // delete selected project
   const deleteProjectHandler = (e) => {
     e.preventDefault();
     firestore
@@ -38,7 +38,7 @@ const ProjectSummary = ({ currentProject, id }) => {
       .doc(id)
       .delete()
       .catch(function (error) {
-        console.error(error);
+        // console.error(error);
       });
     history.push("/projects");
   };
@@ -99,12 +99,36 @@ const ProjectSummary = ({ currentProject, id }) => {
           </div>
         </div>
         <div className={styles.members}>
-          <h1>members</h1>
+        <div className={styles.overview__header}>
+            <h1>Project members</h1>
+          </div>
+          <div className={styles.overview__details}>
+            <ul>
+              {currentProject.members.map((member, index) => {
+                return (
+                  <li className={index % 2 === 0 ? `${styles.details__row__gray}` : `${styles.details__row}`} key={index}>
+                  <h3>{index + 1}. {member.name} ({member.email})</h3>
+                </li>
+                )
+              })}
+            </ul>
+          </div>
         </div>
       </div>
     );
   } else {
-    return <div>...loading</div>;
+    return (
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Spinner />
+      </div>
+    )
   }
 };
 

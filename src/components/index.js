@@ -13,3 +13,4 @@ export {default as Issues} from './Issues/Issues';
 export {default as DragNDrop} from './DragNDrop/DragNDrop';
 export {default as IssuesModal} from './IssuesModal/IssuesModal';
 export {default as SettingsComponent} from './Settings/SettingsComponent';
+export {default as Spinner} from './Spinner/Spinner';

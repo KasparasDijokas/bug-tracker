@@ -24,16 +24,15 @@ const Signup = (props) => {
     });
   };
 
+
   const createUser = (e) => {
     e.preventDefault();
     userInput.name === '' ? setError('Please enter your name') :
     firebase
       .auth()
       .createUserWithEmailAndPassword(userInput.email, userInput.password)
-      .then((user) => {
-        firebase
-          .auth()
-          .currentUser.updateProfile({
+      .then((userData) => {
+        userData.user.updateProfile({
             displayName: userInput.name
           })
           .then(() => {
@@ -51,8 +50,9 @@ const Signup = (props) => {
           })
           .catch(function (error) {
             setError(error.message);
-          });
-        props.history.push(ROUTES.HOME);
+          })
+            props.history.push(ROUTES.HOME);
+          
       })
       .catch((error) => {
         setError(error.message);

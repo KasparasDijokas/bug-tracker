@@ -33,6 +33,7 @@
     font-size: 1rem;
     color: #333;
     width: 40%;
+    padding-left: 8px;
 }
 
 .details__row {
@@ -58,4 +59,15 @@
 
 .overview__details label {
     margin-right: 8px;
+}
+
+/* MEMBERS */
+
+.members {
+    width: 50%;
+}
+
+.members h3 {
+    width: 100%;
+    padding-left: 8px;
 }
