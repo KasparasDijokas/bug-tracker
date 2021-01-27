@@ -5,25 +5,23 @@ import Button from "../Button";
 import { showEmailModal } from "../../Redux/Actions";
 
 function Modal({ showEmailModal, modalState }) {
-//   const [showModal, setShowModal] = useState(showEmailModal);
-
   const [userInput, setuserInput] = useState({
     email: "",
-    message: ""
+    message: "",
   });
 
+// save user input
   const formHandler = (e) => {
     setuserInput({
       ...userInput,
       [e.target.name]: e.target.value,
     });
   };
-
+// show modal
   const sendEmailHandler = (project) => {
-    console.log('email sent');
     showEmailModal();
   };
-
+// cancel modal
   const cancelModal = (e) => {
     e.preventDefault();
     showEmailModal();
@@ -33,12 +31,16 @@ function Modal({ showEmailModal, modalState }) {
     <>
       <div
         className={
-          !modalState ? styles.background : `${styles.background} ${styles.show}`
+          !modalState
+            ? styles.background
+            : `${styles.background} ${styles.show}`
         }
         onClick={() => showEmailModal()}
       ></div>
       <div
-        className={!modalState ? styles.modal : `${styles.modal} ${styles.show}`}
+        className={
+          !modalState ? styles.modal : `${styles.modal} ${styles.show}`
+        }
       >
         <div className={styles.modal__header}>
           <h3>Invite member</h3>
@@ -88,8 +90,8 @@ function Modal({ showEmailModal, modalState }) {
           </form>
           <div className={styles.modal__legend}>
             <p className={styles.legend__text}>
-              Existing users are gaining access to this project
-              immediately. An invitation will be sent to new users.
+              Existing users are gaining access to this project immediately. An
+              invitation will be sent to new users.
             </p>
           </div>
         </div>

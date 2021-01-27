@@ -21,11 +21,7 @@ export const Container = styled.div`
     color: #28bd8b;
 
     &:hover {
-      color: rgba(255,255,255,0.8);
-    }
-
-    @media(max-width: 415px) {
-      display: block;
+      color: rgba(255, 255, 255, 0.8);
     }
   }
 
@@ -37,18 +33,12 @@ export const Container = styled.div`
     color: #28bd8b;
 
     &:hover {
-      color: rgba(255,255,255,0.8);
+      color: rgba(255, 255, 255, 0.8);
     }
   }
-
-  @media(max-width: 415px) {
-    transform: ${props => !props.show ? 'translate(-200px)' : 'translate(0)'};
-  }
 `;
 
-export const Inner = styled.div`
-   
-`;
+export const Inner = styled.div``;
 
 export const Summary = styled.div`
   display: flex;
@@ -67,7 +57,7 @@ export const Summary = styled.div`
   h1 {
     margin: 15px 0 10px;
     font-size: 1.125rem;
-    color: rgba(255,255,255,0.8);
+    color: rgba(255, 255, 255, 0.8);
     margin-bottom: 0;
   }
 
@@ -75,35 +65,58 @@ export const Summary = styled.div`
     font-weight: 300;
     font-size: 0.875rem;
     margin-bottom: 34px;
-    color: rgba(255,255,255,0.8);
+    color: rgba(255, 255, 255, 0.8);
   }
 
   span {
     font-weight: 700;
-    text-transform: capitalize;
   }
 `;
 
 export const Link = styled(NavLink)`
-display: block;
-padding: 17px 15px;
-color: rgba(255,255,255,0.8);
-text-transform: capitalize;
-font-size: 1rem;
-border-left: 4px solid transparent;
+  display: block;
+  padding: 17px 15px;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: capitalize;
+  font-size: 1rem;
+  border-left: 4px solid transparent;
 
-&.active {
+  &.active {
     background-color: #243746;
     border-left: 4px solid #28bd8b;
-}
+  }
 
-&:hover {
+  &:hover {
     background-color: #243746;
     border-left: 4px solid #28bd8b;
-}
+  }
 
-span {
+  span {
     padding-right: 15px;
-}
+  }
+`;
 
+export const Route = styled.p`
+  display: block;
+  padding: 17px 15px;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: capitalize;
+  font-size: 1rem;
+  border-left: 4px solid transparent;
+  margin: 0;
+  cursor: pointer;
+
+  &.active {
+    background-color: #243746;
+    border-left: 4px solid #28bd8b;
+  }
+
+  &:hover {
+    background-color: #243746;
+    border-left: 4px solid #28bd8b;
+  }
+
+  span {
+    padding-right: 15px;
+  }
 `;

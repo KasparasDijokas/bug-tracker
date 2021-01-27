@@ -14,7 +14,7 @@ export const Inner = styled.div`
 export const Body = styled.div`
   width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   padding-left: 24px;
 

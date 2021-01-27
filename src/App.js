@@ -10,26 +10,72 @@ import Overview from "./pages/Overview";
 import Members from "./pages/Members";
 import RolesPage from "./pages/Roles";
 import IssuesPage from "./pages/Issues";
+import Settings from "./pages/Settings";
+import { IsUserLoggedIn, ProtectedRoot } from "./helper/routes";
+import useAuthListener from "./hooks/useAuthListener";
 
 function App() {
+  const { user } = useAuthListener();
+
   return (
     <>
-    <div className='app'>
-      <Router>
-        <GlobalStyles />
-        <NavContainer/>
-        <Switch>
-          <Route exact path="/" component={Home}/>
-          <Route path="/signin" component={Signin}/>
-          <Route path="/signup" component={Signup}/>
-          <Route path="/reset" component={Reset}/>
-          <Route path="/projects" component={Projects}/>
-          <Route path="/overview" component={Overview}/>
-          <Route path="/members" component={Members}/>
-          <Route path="/roles" component={RolesPage}/>
-          <Route path="/issues" component={IssuesPage}/>
-        </Switch>
-      </Router>
+      <div className="app">
+        <Router>
+          <GlobalStyles />
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <IsUserLoggedIn
+              user={user}
+              loggedInPath="/projects"
+              path="/signin"
+              exact
+            >
+              <Signin />
+            </IsUserLoggedIn>
+            <IsUserLoggedIn
+              user={user}
+              loggedInPath="/projects"
+              path="/signup"
+              exact
+            >
+              <Signup />
+            </IsUserLoggedIn>
+
+            <ProtectedRoot user={user} exact path="/projects">
+              <NavContainer />
+              <Projects />
+            </ProtectedRoot>
+
+            <ProtectedRoot user={user} exact path="/reset">
+              <Reset />
+            </ProtectedRoot>
+
+            <ProtectedRoot user={user} exact path="/overview/:id">
+              <NavContainer />
+              <Overview />
+            </ProtectedRoot>
+
+            <ProtectedRoot user={user} exact path="/members/:id">
+              <NavContainer />
+              <Members />
+            </ProtectedRoot>
+
+            <ProtectedRoot user={user} exact path="/roles/:id">
+              <NavContainer />
+              <RolesPage />
+            </ProtectedRoot>
+
+            <ProtectedRoot user={user} exact path="/issues/:id">
+              <NavContainer />
+              <IssuesPage />
+            </ProtectedRoot>
+
+            <ProtectedRoot user={user} exact path="/settings">
+              <NavContainer />
+              <Settings />
+            </ProtectedRoot>
+          </Switch>
+        </Router>
       </div>
     </>
   );

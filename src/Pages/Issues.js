@@ -1,49 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import DashboardContainer from "../containers/DashboardContainer";
 import { Issues } from "../components";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect } from "react-redux-firebase";
+import { useParams } from "react-router-dom";
+import { Spinner } from "../components";
 
 const IssuesPage = () => {
-  const [data, setData] = useState();
-
-  const { email } = useSelector((state) => {
-    return state.firebase.auth;
-  });
+  let { id } = useParams();
 
   useFirestoreConnect({
-    collection: `users`,
-    storeAs: "users",
+    collection: `projects`,
+    storeAs: "projectsCollection",
   });
 
-  useFirestoreConnect({
-    collection: `users/${email}/projects`,
-    storeAs: "projects",
-  });
-  const { projects, users } = useSelector((state) => {
+  const { projectsCollection } = useSelector((state) => {
     return state.firestore.data;
   });
 
-  let currentProject = null;
-  if (projects && users && email) {
-    currentProject = projects[users[email].id];
-  }
-
-  useEffect(() => {
-    setData(currentProject);
-  }, [currentProject]);
-
-  if (data) {
+  if (projectsCollection) {
     return (
       <div style={{ display: "flex" }}>
-        <DashboardContainer />
+        <DashboardContainer id={id} />
         <div style={{ width: "100%" }}>
-          <Issues currentProject={data}/>
+          <Issues currentProject={projectsCollection[id]} id={id} />
         </div>
       </div>
     );
   } else {
-    return <div>...loading</div>;
+    return (
+      <div
+        style={{
+          height: "100vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Spinner />
+      </div>
+    );
   }
 };
 

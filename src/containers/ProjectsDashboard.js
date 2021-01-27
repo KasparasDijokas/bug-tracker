@@ -1,11 +1,22 @@
 import React, { useState } from "react";
 import { Dashboard } from "../components";
-import logo from "../images/logo_main.png";
-import {useSelector} from 'react-redux';
+import firebase from "../config/firebase";
+import { useHistory } from "react-router-dom";
+import * as ROUTES from "../constants/routes";
 
 const DashboardContainer = () => {
+  const history = useHistory();
   const [openDashboad, setOpenDashboard] = useState(false);
-  const {displayName, email} = useSelector(state => state.firebase.auth);
+  const user = firebase.auth().currentUser;
+
+  const signOutHandler = () => {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        history.push(ROUTES.SIGN_IN);
+      });
+  };
 
   return (
     <Dashboard show={openDashboad}>
@@ -21,27 +32,23 @@ const DashboardContainer = () => {
             className="far fa-times-circle"
           ></i>
         )}
-        {/* <img src={logo} alt="logo" /> */}
-        <h1>{displayName}</h1>
-        <p>
-          {email}
-        </p>
+        <h1>{user && user.displayName}</h1>
+        <p>{user && user.email}</p>
       </Dashboard.Summary>
-      <Dashboard.Link to="/projects">
+      <Dashboard.Link to={ROUTES.PROJECTS}>
         <span>
           <i className="fab fa-buffer"></i>
         </span>
         Projects
       </Dashboard.Link>
-      <Dashboard.Link exact to="/signin">
+      <Dashboard.Route onClick={signOutHandler}>
         <span>
-        <i className="fas fa-sign-out-alt"></i>
+          <i className="fas fa-sign-out-alt"></i>
         </span>
         Sign out
-      </Dashboard.Link>
+      </Dashboard.Route>
     </Dashboard>
   );
 };
 
 export default DashboardContainer;
-

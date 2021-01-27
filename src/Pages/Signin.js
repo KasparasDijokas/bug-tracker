@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import { Form } from "../components";
 import FormImage from "../images/login.png";
 import firebase from "../config/firebase";
@@ -6,19 +6,19 @@ import * as ROUTES from "../constants/routes";
 import { useHistory } from "react-router-dom";
 
 const Signin = () => {
-const history = useHistory();
+  const history = useHistory();
   const [userInput, setUserInput] = useState({
-    email: "",
-    password: ""
+    email: 'admin@email.com',  
+    password: "123456",
   });
   const [error, setError] = useState("");
 
   const userInputHandler = (e) => {
     setUserInput({
       ...userInput,
-      [e.target.name]: e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const loginHandler = (e) => {
     e.preventDefault();
@@ -50,6 +50,7 @@ const history = useHistory();
               type="text"
               placeholder="Email"
               onChange={userInputHandler}
+              value={userInput.email}
             ></Form.Input>
           </Form.InputWrapper>
           <Form.InputWrapper>
@@ -61,16 +62,17 @@ const history = useHistory();
               type="password"
               placeholder="Password"
               onChange={userInputHandler}
+              value={userInput.password}
             ></Form.Input>
           </Form.InputWrapper>
           {error && <Form.Message error>{error}</Form.Message>}
           <Form.Button onClick={loginHandler}>Login</Form.Button>
           <Form.Frame>
             <Form.Span>Forgot</Form.Span>
-            <Form.LinkEl to="reset">Username / Password ?</Form.LinkEl>
+            <Form.LinkEl to={ROUTES.RESET}>Username / Password ?</Form.LinkEl>
           </Form.Frame>
           <Form.AccountWrapper>
-            <Form.LinkEl to="/signup">
+            <Form.LinkEl to={ROUTES.SIGN_UP}>
               Create your account
               <i className="fas fa-long-arrow-alt-right"></i>
             </Form.LinkEl>

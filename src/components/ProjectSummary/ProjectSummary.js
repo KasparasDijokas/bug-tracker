@@ -6,44 +6,46 @@ import { useSelector } from "react-redux";
 import { showModal } from "../../Redux/Actions";
 import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { Spinner } from "../index";
+import { useFirestoreConnect } from "react-redux-firebase";
 
 const ProjectSummary = ({ currentProject, id }) => {
   const firestore = useFirestore();
   const history = useHistory();
 
-  const { email } = useSelector((state) => {
-    return state.firebase.auth;
+  // connect to firestore (members collection)
+  useFirestoreConnect({
+    collection: `members`,
+    storeAs: "membersData",
+  });
+  const { membersData } = useSelector((state) => {
+    return state.firestore.data;
   });
 
+  // edit projects info (title, username)
   const handleChange = (e) => {
     firestore
-      .collection("users")
-      .doc(email)
       .collection("projects")
       .doc(id)
       .update({
         [e.target.name]: e.target.value,
-      })
-      .catch(function (error) {
-        console.error(error);
       });
   };
 
+  // delete project from firestore
   const deleteProjectHandler = (e) => {
     e.preventDefault();
     firestore
-      .collection("users")
-      .doc(email)
       .collection("projects")
       .doc(id)
       .delete()
       .catch(function (error) {
-        console.error(error);
+        // console.error(error);
       });
     history.push("/projects");
   };
 
-  if (currentProject) {
+  if (currentProject && membersData) {
     return (
       <div className={styles.container}>
         <div className={styles.overview}>
@@ -72,14 +74,36 @@ const ProjectSummary = ({ currentProject, id }) => {
                 <label htmlFor="platform" onChange={handleChange}>
                   <i className="far fa-edit"></i>
                 </label>
-                <input
-                  value={currentProject.platform}
-                  onChange={handleChange}
-                  name="platform"
-                  id="platform"
-                />
+                <div className="platform">
+                  <div>
+                    <input
+                      type="radio"
+                      name="platform"
+                      value="android"
+                      checked={currentProject.platform === "android"}
+                      onChange={handleChange}
+                    />
+                    <label htmlFor="android">Android</label>
+                    <input
+                      type="radio"
+                      name="platform"
+                      value="iOs"
+                      checked={currentProject.platform === "iOs"}
+                      onChange={handleChange}
+                    />
+                    <label htmlFor="apple">iOS</label>
+                    <input
+                      type="radio"
+                      name="platform"
+                      value="web"
+                      checked={currentProject.platform === "web"}
+                      onChange={handleChange}
+                    />
+                    <label htmlFor="web">Web</label>
+                  </div>
+                </div>
               </li>
-              <li className={styles.details__row}>
+              <li className={styles.details__row__gray}>
                 <h3>Project Author: </h3>
                 <label htmlFor="projectAuthor" onChange={handleChange}>
                   <i className="far fa-edit"></i>
@@ -91,7 +115,7 @@ const ProjectSummary = ({ currentProject, id }) => {
                   id="projectAuthor"
                 />
               </li>
-              <li className={styles.details__row__gray}>
+              <li className={styles.details__row}>
                 <h3>Created: </h3>
                 <input value={currentProject.createdAt} readOnly />
               </li>
@@ -99,12 +123,49 @@ const ProjectSummary = ({ currentProject, id }) => {
           </div>
         </div>
         <div className={styles.members}>
-          <h1>members</h1>
+          <div className={styles.overview__header}>
+            <h1>Project members</h1>
+          </div>
+          <div className={styles.overview__details}>
+            <ul>
+              {Object.keys(currentProject.members).map((member, index) => {
+                return (
+                  <li
+                    className={
+                      index % 2 === 0
+                        ? `${styles.details__row__gray}`
+                        : `${styles.details__row}`
+                    }
+                    key={index}
+                  >
+                    <p>
+                      {index + 1}. {membersData[member].userName}{" "}
+                      {currentProject.members[member]
+                        ? `(${currentProject.members[member]})`
+                        : "(Role is not assigned)"}
+                    </p>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
       </div>
     );
   } else {
-    return <div>...loading</div>;
+    return (
+      <div
+        style={{
+          height: "100vh",
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Spinner />
+      </div>
+    );
   }
 };
 
