@@ -5,9 +5,11 @@ import Button from "../Button";
 import Dropzone from "../../components/Dropzone/Dropzone";
 import { showModal } from "../../Redux/Actions";
 import { useFirestore } from "react-redux-firebase";
-import { useSelector } from "react-redux";
+import firebase from "../../config/firebase";
 
 function Modal(props) {
+  const user = firebase.auth().currentUser;
+  const firestore = useFirestore();
 
   const [userInput, setuserInput] = useState({
     category: "",
@@ -15,6 +17,7 @@ function Modal(props) {
     title: "",
   });
 
+  // set user Input
   const formHandler = (e) => {
     setuserInput({
       ...userInput,
@@ -22,32 +25,24 @@ function Modal(props) {
     });
   };
 
-  // create project in firestore
-  const firestore = useFirestore();
-  // destructure author name and email
-  const { email, displayName } = useSelector((state) => {
-    return state.firebase.auth;
-  });
-
-  // add new project
+  // add new project in firestore
   const addNewProject = (project) => {
     firestore
-      .collection("users")
-      .doc(email)
       .collection("projects")
       .add({
         ...project,
-        members: [],
-        projectId: '',
-        projectAuthor: displayName,
+        members: {},
+        projectId: "",
+        projectAuthor: user.displayName,
+        projectAuthorEmail: user.email,
         createdAt: new Date().toDateString(),
         issues: {
           Submitted: [],
-          'To do': [],
-          'In progress': [],
-          Done: []
+          "To do": [],
+          "In progress": [],
+          Done: [],
         },
-        userRole: ''
+        userRole: "",
       })
       .then((docRef) => {
         docRef.update({
@@ -56,7 +51,7 @@ function Modal(props) {
       });
     setuserInput("");
     props.showModal();
-    }
+  };
 
   const cancelModal = (e) => {
     e.preventDefault();
@@ -81,10 +76,10 @@ function Modal(props) {
             <div className="options">
               <p>Category</p>
               <select name="category" onChange={formHandler}>
-                <option>DevOp</option>
+                <option>Testing</option>
                 <option>Front-end</option>
                 <option>Back-End</option>
-                <option>UX</option>
+                <option>UI/UX</option>
               </select>
             </div>
             <div className="platform">
@@ -92,7 +87,7 @@ function Modal(props) {
               <div onChange={formHandler}>
                 <input type="radio" name="platform" value="android" />
                 <label htmlFor="android">Android</label>
-                <input type="radio" name="platform" value="apple" />
+                <input type="radio" name="platform" value="iOs" />
                 <label htmlFor="apple">iOS</label>
                 <input type="radio" name="platform" value="web" />
                 <label htmlFor="web">Web</label>
@@ -108,7 +103,14 @@ function Modal(props) {
               ></input>
             </div>
             <div className="buttons">
-              <Button onClick={(e) => {e.preventDefault(); addNewProject(userInput)}}>Add New Project</Button>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  addNewProject(userInput);
+                }}
+              >
+                Add New Project
+              </Button>
               <Button onClick={cancelModal} error>
                 Cancel
               </Button>

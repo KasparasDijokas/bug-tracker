@@ -57,7 +57,18 @@ export const User = styled.div`
 export const Footer = styled.div`
   font-size: 13px;
   color: #555;
-  background-color: ${(props) => props.footerColor};
+  background-color: ${({ footerColor }) =>
+    footerColor === `Documentation`
+      ? "#bdbdbd"
+      : footerColor === "Task"
+      ? "#64b5f6"
+      : footerColor === "Feature"
+      ? "#4db6ac"
+      : footerColor === "Usability problem"
+      ? "#9575cd"
+      : footerColor === "Bug"
+      ? "#e3af5b"
+      : "#e57373"};
   text-align: center;
   padding: 2px 0;
 `;

@@ -9,12 +9,11 @@ const firebaseConfig = {
   projectId: "bug-trackerv2",
   storageBucket: "bug-trackerv2.appspot.com",
   messagingSenderId: "570881381207",
-  appId: "1:570881381207:web:3ddecd25d7307ec8eea412"
+  appId: "1:570881381207:web:3ddecd25d7307ec8eea412",
 };
-
 
 firebase.initializeApp(firebaseConfig);
 firebase.firestore();
-firebase.firestore().settings({timestampsInSnapshots: true});
+firebase.firestore().settings({ timestampsInSnapshots: true });
 
 export default firebase;

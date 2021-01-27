@@ -2,73 +2,67 @@ import React, { useState, useEffect } from "react";
 import styles from "./rolesMemberCard.module.css";
 import userImage from "../../images/user.png";
 import Button from "../Button";
-import GetCurrentProject from "../../helper/GetCurrentProject";
 import { useFirestore } from "react-redux-firebase";
 import { useSelector } from "react-redux";
+import { useFirestoreConnect } from "react-redux-firebase";
 
-const RolesMemberCard = ({ user }) => {
-  const currentProject = GetCurrentProject();
+const RolesMemberCard = ({ user, currentProject, id }) => {
   const firestore = useFirestore();
   const [memberStatus, setMemberStatus] = useState(false);
   const [role, setRole] = useState("");
-  const { email } = useSelector((state) => {
-    return state.firebase.auth;
-  });
 
+  // connect to firestore (members collection)
+  useFirestoreConnect({
+    collection: `members`,
+    storeAs: "members",
+  });
+  const members = useSelector((state) => state.firestore.data.members);
+
+  // set role from db
   useEffect(() => {
     firestore
-      .collection("members")
-      .doc(email)
+      .collection("projects")
+      .doc(id)
       .get()
       .then((doc) => {
-        if (user) {
-          setRole(doc.data().projects[currentProject.projectId].userRole);
-        }
+        setRole(doc.data().members[user]);
       });
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
-  const date = new Date(+user.createdAt).toDateString();
-
-  // remove current project from selected user
+  // remove user from current project
   const removeUserHandler = (user) => {
     setMemberStatus(!memberStatus);
     firestore
-      .collection("members")
-      .doc(email)
+      .collection(`projects`)
+      .doc(id)
       .set(
         {
-          projects: {
-            [currentProject.projectId]: firestore.FieldValue.delete(),
+          members: {
+            [`${user}`]: firestore.FieldValue.delete(),
           },
         },
         { merge: true }
-      )
-      .then(() => {
-        firestore
-          .collection(`users/${email}/projects`)
-          .doc(currentProject.projectId)
-          .set({
-            members: {
-              [email]: firestore.FieldValue.delete(),
-            }
-          },
-          { merge: true });
-      });
+      );
   };
 
-  // update userRole
+  // assign role to user
   const roleHandler = (e, user) => {
     setRole(e.target.value);
     firestore
-      .collection(`members`)
-      .doc(email)
-      .update({
-        [`projects.${currentProject.projectId}.userRole`]: e.target.value,
-      });
+      .collection(`projects`)
+      .doc(id)
+      .set(
+        {
+          members: {
+            [`${user}`]: e.target.value,
+          },
+        },
+        { merge: true }
+      );
   };
 
-  if (user) {
-    console.log(user);
+  if (user && members) {
     return (
       <div className={styles.body__nav}>
         <div className={styles.member__card}>
@@ -76,10 +70,12 @@ const RolesMemberCard = ({ user }) => {
             <img src={userImage} alt="user" />
           </div>
           <div>
-            <p className={styles.userName}>{user.userName}</p>
-            <p className={styles.userEmail}>{user.userEmail}</p>
+            <p className={styles.userName}>{members[user].userName}</p>
+            <p className={styles.userEmail}>{members[user].userEmail}</p>
           </div>
-          <p className={styles.card__text}>{date}</p>
+          <p className={styles.card__text}>
+            {new Date(members[user].createdAt).toDateString()}
+          </p>
           <div>
             <select
               className={styles.options}
@@ -94,9 +90,9 @@ const RolesMemberCard = ({ user }) => {
               <option>Intern</option>
             </select>
           </div>
-            <Button onClick={() => removeUserHandler(user)} error>
-              Remove
-            </Button>
+          <Button onClick={() => removeUserHandler(user)} error>
+            Remove
+          </Button>
         </div>
       </div>
     );
