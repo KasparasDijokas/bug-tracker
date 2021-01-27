@@ -5,11 +5,12 @@ import RolesMemberCard from "../RolesMemberCard/RolesMemberCard";
 import Fuse from "fuse.js";
 import {Link} from 'react-router-dom';
 
-const MembersRoles = ({currentProject, showEmailModal}) => {
+const MembersRoles = ({currentProject, showEmailModal, id}) => {
   const [searchInput, setSearchInput] = useState("");
 
   // fuse.js
-  let list = [...currentProject.members];
+  let list = [];
+  Object.keys(currentProject.members).map(user => list.push(user))
 
   const options = {
     includeScore: true,
@@ -26,7 +27,6 @@ const MembersRoles = ({currentProject, showEmailModal}) => {
     });
     list = [...newList];
   }
-
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -36,7 +36,7 @@ const MembersRoles = ({currentProject, showEmailModal}) => {
             type="text"
             name="search"
             id="search"
-            placeholder="Search"
+            placeholder="Search by email"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
           />
@@ -58,7 +58,7 @@ const MembersRoles = ({currentProject, showEmailModal}) => {
         </div>
         {list &&
           list.map((user, index) => {
-            return <RolesMemberCard user={user} key={index} currentProject={currentProject}/>;
+            return <RolesMemberCard user={user} key={index} currentProject={currentProject} id={id}/>;
           })}
       </div>
     </div>

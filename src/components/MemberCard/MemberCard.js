@@ -3,72 +3,48 @@ import styles from "./memberCard.module.css";
 import userImage from "../../images/user.png";
 import Button from "../Button";
 import { useFirestore } from "react-redux-firebase";
-import { useSelector } from "react-redux";
 import { Spinner } from "../index";
-import useCurrentProject from "../../hooks/useCurrentProject";
 
-const MemberCard = ({ user }) => {
-  const currentProject = useCurrentProject();
+const MemberCard = ({ user, currentProjectId, currentProject }) => {
   const firestore = useFirestore();
   const [memberAssigned, setMemberAssigned] = useState(false);
-  const { email } = useSelector((state) => state.firebase.auth);
 
+  // date conversion
   const date = new Date(+user.createdAt).toDateString();
 
-  // add current project to selected user
-  const assignMemberHandler = (user, btnState) => {
-    // update selected users 'projects' field with current project
+  // add member to current Project
+  const assignMemberHandler = (user) => {
     setMemberAssigned(!memberAssigned);
     firestore
-      .collection("members")
-      .doc(user.userEmail)
-      .update({
-        projects: {
-          ...user.projects,
-          [currentProject.projectId]: currentProject,
-        },
-      })
-      .then(() => {
-        firestore
-          .collection(`users/${email}/projects`)
-          .doc(currentProject.projectId)
-          .update({
-            members: firestore.FieldValue.arrayUnion({
-              email: user.userEmail,
-              name: user.userName,
-            }),
-          });
-      });
-  };
-
-  // remove current project from selected user
-  const removeUserHandler = (user) => {
-    setMemberAssigned(!memberAssigned);
-    firestore
-      .collection("members")
-      .doc(user.userEmail)
+      .collection(`projects`)
+      .doc(currentProjectId)
       .set(
         {
-          projects: {
-            [currentProject.projectId]: firestore.FieldValue.delete(),
+          members: {
+            [`${user.userEmail}`]: `${user.userRole}`,
           },
         },
         { merge: true }
-      )
-      .then(() => {
-        firestore
-          .collection(`users/${email}/projects`)
-          .doc(currentProject.projectId)
-          .update({
-            members: firestore.FieldValue.arrayRemove({
-              email: user.userEmail,
-              name: user.userName,
-            }),
-          });
-      });
+      );
   };
 
-  if (user && currentProject) {
+  // remove member from current Project
+  const removeUserHandler = (user) => {
+    setMemberAssigned(!memberAssigned);
+    firestore
+      .collection(`projects`)
+      .doc(currentProjectId)
+      .set(
+        {
+          members: {
+            [`${user.userEmail}`]: firestore.FieldValue.delete(),
+          },
+        },
+        { merge: true }
+      );
+  };
+
+  if (currentProject) {
     return (
       <div className={styles.body__nav}>
         <div className={styles.member__card}>
@@ -81,12 +57,12 @@ const MemberCard = ({ user }) => {
           </div>
           <p className={styles.card__text}>{date}</p>
           <p className={styles.card__text}>
-            {!user.projects[currentProject.projectId] ||
-            user.projects[currentProject.projectId].userRole.length < 1
-              ? `not assigned`
-              : user.projects[currentProject.projectId].userRole}
+            {!currentProject.members.hasOwnProperty(user.userEmail) ||
+            currentProject.members[user.userEmail] === 'undefined'
+              ? "not assigned"
+              : currentProject.members[user.userEmail]}
           </p>
-          {user.projects[currentProject.projectId] ? (
+          {currentProject.members.hasOwnProperty(user.userEmail) ? (
             <div className={styles.controls}>
               <i className="far fa-check-circle"></i>
               <span onClick={() => removeUserHandler(user)}>remove</span>

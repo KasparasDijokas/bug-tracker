@@ -2,6 +2,7 @@ import { useFirestoreConnect } from "react-redux-firebase";
 import { useSelector } from "react-redux";
 
 const useCurrentProject = (props) => {
+  
   const { email } = useSelector((state) => {
     return state.firebase.auth;
   });

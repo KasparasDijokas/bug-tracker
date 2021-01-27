@@ -5,11 +5,11 @@ import Button from "../Button";
 import Dropzone from "../../components/Dropzone/Dropzone";
 import { showModal } from "../../Redux/Actions";
 import { useFirestore } from "react-redux-firebase";
-import { useSelector } from "react-redux";
-import firebase from '../../config/firebase';
+import firebase from "../../config/firebase";
 
 function Modal(props) {
   const user = firebase.auth().currentUser;
+  const firestore = useFirestore();
 
   const [userInput, setuserInput] = useState({
     category: "",
@@ -17,6 +17,7 @@ function Modal(props) {
     title: "",
   });
 
+  // set user Input
   const formHandler = (e) => {
     setuserInput({
       ...userInput,
@@ -24,28 +25,24 @@ function Modal(props) {
     });
   };
 
-  // create project in firestore
-  const firestore = useFirestore();
-
-  // add new project
+  // add new project in firestore
   const addNewProject = (project) => {
     firestore
-      .collection("users")
-      .doc(user.email)
       .collection("projects")
       .add({
         ...project,
-        members: [],
-        projectId: '',
+        members: {},
+        projectId: "",
         projectAuthor: user.displayName,
+        projectAuthorEmail: user.email,
         createdAt: new Date().toDateString(),
         issues: {
           Submitted: [],
-          'To do': [],
-          'In progress': [],
-          Done: []
+          "To do": [],
+          "In progress": [],
+          Done: [],
         },
-        userRole: ''
+        userRole: "",
       })
       .then((docRef) => {
         docRef.update({
@@ -54,7 +51,7 @@ function Modal(props) {
       });
     setuserInput("");
     props.showModal();
-    }
+  };
 
   const cancelModal = (e) => {
     e.preventDefault();
@@ -106,7 +103,14 @@ function Modal(props) {
               ></input>
             </div>
             <div className="buttons">
-              <Button onClick={(e) => {e.preventDefault(); addNewProject(userInput)}}>Add New Project</Button>
+              <Button
+                onClick={(e) => {
+                  e.preventDefault();
+                  addNewProject(userInput);
+                }}
+              >
+                Add New Project
+              </Button>
               <Button onClick={cancelModal} error>
                 Cancel
               </Button>

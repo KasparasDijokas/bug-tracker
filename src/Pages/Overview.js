@@ -1,19 +1,30 @@
 import React from "react";
 import ProjectSummary from "../components/ProjectSummary/ProjectSummary";
-import DashboardContainer from '../containers/DashboardContainer';
-import useCurrentProject from '../hooks/useCurrentProject';
-import {Spinner} from '../components';
+import DashboardContainer from "../containers/DashboardContainer";
+import { Spinner } from "../components";
+import { useSelector } from "react-redux";
+import { useFirestoreConnect } from "react-redux-firebase";
+import { useParams } from "react-router-dom";
 
 const Overview = (props) => {
-  const currentProject = useCurrentProject();
+  let { id } = useParams();
 
-  if (currentProject) {
+  useFirestoreConnect({
+    collection: `projects`,
+    storeAs: "projectsCollection",
+  });
+
+  const { projectsCollection } = useSelector((state) => {
+    return state.firestore.data;
+  });
+
+  if (projectsCollection) {
     return (
-      <div style={{display: 'flex'}}>
-        <DashboardContainer/>
-        <ProjectSummary currentProject={currentProject} id={currentProject.projectId} />;
+      <div style={{ display: "flex" }}>
+        <DashboardContainer id={id} />
+        <ProjectSummary currentProject={projectsCollection[id]} id={id} />
       </div>
-      ) 
+    );
   } else {
     return (
       <div
@@ -26,7 +37,7 @@ const Overview = (props) => {
       >
         <Spinner />
       </div>
-    )
+    );
   }
 };
 

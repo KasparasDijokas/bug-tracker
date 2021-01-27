@@ -7,7 +7,14 @@ import EmailModal from "../EmailModal";
 import { showEmailModal } from "../../Redux/Actions";
 import { connect } from "react-redux";
 
-const Members = ({ members, emailModal, showEmailModal }) => {
+const Members = ({
+  members,
+  emailModal,
+  showEmailModal,
+  projects,
+  currentProjectId,
+  currentProject,
+}) => {
   const [searchInput, setSearchInput] = useState("");
 
   // create list array (all members) to use it with fuse.js
@@ -29,7 +36,7 @@ const Members = ({ members, emailModal, showEmailModal }) => {
   if (result.length > 0) {
     let newList = [];
     result.map((el) => {
-     return newList.push(el.item);
+      return newList.push(el.item);
     });
     list = [...newList];
   }
@@ -64,7 +71,15 @@ const Members = ({ members, emailModal, showEmailModal }) => {
         </div>
         {list &&
           list.map((user) => {
-            return <MemberCard user={user} key={user.createdAt} />;
+            return (
+              <MemberCard
+                user={user}
+                projects={projects}
+                currentProject={currentProject}
+                currentProjectId={currentProjectId}
+                key={user.createdAt}
+              />
+            );
           })}
       </div>
     </div>

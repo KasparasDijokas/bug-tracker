@@ -22,7 +22,7 @@ export function IsUserLoggedIn({ user, loggedInPath, children, ...restProps }) {
   );
 }
 
-// Protected routes 
+// Protected routes
 // if user is logged in - return children (return page which user tried to access)
 // if user is not logged in - redirect to signin page (from location - from page user tried to access)
 export function ProtectedRoot({ user, children, ...restProps }) {
@@ -39,7 +39,7 @@ export function ProtectedRoot({ user, children, ...restProps }) {
             <Redirect
               to={{
                 pathname: "signin",
-                state: { from: location }
+                state: { from: location },
               }}
             />
           );

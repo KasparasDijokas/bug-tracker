@@ -26,7 +26,6 @@ Nav.TextLink = function NavTextLink({ children, ...restProps }) {
   return <TextLink {...restProps}>{children}</TextLink>;
 };
 
-
 Nav.Wrapper = function NavWrapper({ children, ...restProps }) {
   return <Wrapper {...restProps}>{children}</Wrapper>;
 };

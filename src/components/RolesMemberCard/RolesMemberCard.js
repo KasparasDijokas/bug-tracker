@@ -6,68 +6,60 @@ import { useFirestore } from "react-redux-firebase";
 import { useSelector } from "react-redux";
 import { useFirestoreConnect } from "react-redux-firebase";
 
-const RolesMemberCard = ({ user, currentProject }) => {
+const RolesMemberCard = ({ user, currentProject, id }) => {
   const firestore = useFirestore();
   const [memberStatus, setMemberStatus] = useState(false);
   const [role, setRole] = useState("");
 
+  // connect to firestore (members collection)
   useFirestoreConnect({
     collection: `members`,
     storeAs: "members",
   });
-
-  const { email } = useSelector((state) => {
-    return state.firebase.auth;
-  });
-
-  const members = useSelector(state => state.firestore.data.members);
+  const members = useSelector((state) => state.firestore.data.members);
 
   // set role from db
   useEffect(() => {
     firestore
-      .collection("members")
-      .doc(user.email)
+      .collection("projects")
+      .doc(id)
       .get()
       .then((doc) => {
-          setRole(doc.data().projects[currentProject.projectId].userRole);
+        setRole(doc.data().members[user]);
       });
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
+  // remove user from current project
   const removeUserHandler = (user) => {
     setMemberStatus(!memberStatus);
     firestore
-          .collection(`users/${email}/projects`)
-          .doc(currentProject.projectId)
-          .update({
-            members: firestore.FieldValue.arrayRemove({
-              email: user.email,
-              name: user.name,
-            }),
-          }).then(() => {
-            firestore
-            .collection("members")
-            .doc(user.email)
-            .set(
-              {
-                projects: {
-                  [currentProject.projectId]: firestore.FieldValue.delete(),
-                },
-              },
-              { merge: true }
-            )
-          })
+      .collection(`projects`)
+      .doc(id)
+      .set(
+        {
+          members: {
+            [`${user}`]: firestore.FieldValue.delete(),
+          },
+        },
+        { merge: true }
+      );
   };
 
-  // update userRole
+  // assign role to user
   const roleHandler = (e, user) => {
-    console.log(user);
     setRole(e.target.value);
     firestore
-      .collection(`members`)
-      .doc(user.email)
-      .update({
-        [`projects.${currentProject.projectId}.userRole`]: e.target.value,
-      });
+      .collection(`projects`)
+      .doc(id)
+      .set(
+        {
+          members: {
+            [`${user}`]: e.target.value,
+          },
+        },
+        { merge: true }
+      );
   };
 
   if (user && members) {
@@ -78,10 +70,12 @@ const RolesMemberCard = ({ user, currentProject }) => {
             <img src={userImage} alt="user" />
           </div>
           <div>
-            <p className={styles.userName}>{user.name}</p>
-            <p className={styles.userEmail}>{user.email}</p>
+            <p className={styles.userName}>{members[user].userName}</p>
+            <p className={styles.userEmail}>{members[user].userEmail}</p>
           </div>
-          <p className={styles.card__text}>{new Date(members[user.email].createdAt).toDateString()}</p>
+          <p className={styles.card__text}>
+            {new Date(members[user].createdAt).toDateString()}
+          </p>
           <div>
             <select
               className={styles.options}
@@ -96,9 +90,9 @@ const RolesMemberCard = ({ user, currentProject }) => {
               <option>Intern</option>
             </select>
           </div>
-            <Button onClick={() => removeUserHandler(user)} error>
-              Remove
-            </Button>
+          <Button onClick={() => removeUserHandler(user)} error>
+            Remove
+          </Button>
         </div>
       </div>
     );

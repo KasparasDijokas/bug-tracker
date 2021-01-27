@@ -24,39 +24,35 @@ const Signup = (props) => {
     });
   };
 
-
   const createUser = (e) => {
     e.preventDefault();
-    userInput.name === '' ? setError('Please enter your name') :
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(userInput.email, userInput.password)
-      .then((userData) => {
-        userData.user.updateProfile({
-            displayName: userInput.name
-          })
-          .then(() => {
-            const currentU = firebase.auth().currentUser;
-            firestore
-            .collection(`members`)
-            .doc(currentU.email)
-            .set({
-              userName: currentU.displayName,
-              userEmail: currentU.email,
-              createdAt: Date.now(),
-              projects: {},
-              userRole: ''
-            })
-          })
-          .catch(function (error) {
-            setError(error.message);
-          })
+    userInput.name === ""
+      ? setError("Please enter your name")
+      : firebase
+          .auth()
+          .createUserWithEmailAndPassword(userInput.email, userInput.password)
+          .then((userData) => {
+            userData.user
+              .updateProfile({
+                displayName: userInput.name,
+              })
+              .then(() => {
+                const currentU = firebase.auth().currentUser;
+                firestore.collection(`members`).doc(currentU.email).set({
+                  userName: currentU.displayName,
+                  userEmail: currentU.email,
+                  createdAt: Date.now(),
+                  projects: {},
+                });
+              })
+              .catch(function (error) {
+                setError(error.message);
+              });
             props.history.push(ROUTES.HOME);
-          
-      })
-      .catch((error) => {
-        setError(error.message);
-      });
+          })
+          .catch((error) => {
+            setError(error.message);
+          });
   };
 
   return (
@@ -105,7 +101,7 @@ const Signup = (props) => {
           <Form.Button onClick={createUser}>SIGN UP</Form.Button>
           <Form.Frame>
             <Form.Span>Already a user? </Form.Span>
-            <Form.LinkEl to="signin">Login</Form.LinkEl>
+            <Form.LinkEl to={ROUTES.SIGN_IN}>Login</Form.LinkEl>
           </Form.Frame>
         </Form.DetailsContainer>
       </Form.FormContainer>

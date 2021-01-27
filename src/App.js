@@ -50,22 +50,22 @@ function App() {
               <Reset />
             </ProtectedRoot>
 
-            <ProtectedRoot user={user} exact path="/overview">
+            <ProtectedRoot user={user} exact path="/overview/:id">
               <NavContainer />
               <Overview />
             </ProtectedRoot>
 
-            <ProtectedRoot user={user} exact path="/members">
+            <ProtectedRoot user={user} exact path="/members/:id">
               <NavContainer />
               <Members />
             </ProtectedRoot>
 
-            <ProtectedRoot user={user} exact path="/roles">
+            <ProtectedRoot user={user} exact path="/roles/:id">
               <NavContainer />
               <RolesPage />
             </ProtectedRoot>
 
-            <ProtectedRoot user={user} exact path="/issues">
+            <ProtectedRoot user={user} exact path="/issues/:id">
               <NavContainer />
               <IssuesPage />
             </ProtectedRoot>

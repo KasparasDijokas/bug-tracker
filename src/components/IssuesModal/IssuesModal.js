@@ -5,66 +5,67 @@ import Button from "../Button";
 import { showIssuesModal } from "../../Redux/Actions";
 import { useFirestore } from "react-redux-firebase";
 import { useSelector } from "react-redux";
-import { useFirestoreConnect } from "react-redux-firebase";
 import uuid from "react-uuid";
 
-function IssuesModal(props) {
+function IssuesModal({
+  currentBug,
+  id,
+  currentProject,
+  members,
+  issuesModalState,
+  showIssuesModal,
+}) {
   const firestore = useFirestore();
-  const bug = props.currentBug ? props.currentBug : null;
-  
+
+  // check if modal was opened with bug (edit) or user wants to create new bug
+  const bug = currentBug ? currentBug : null;
+
   const { email } = useSelector((state) => {
     return state.firebase.auth;
   });
 
-  useFirestoreConnect({
-    collection: `members`,
-    storeAs: "members",
-  });
-  const members = useSelector((state) => {
-    return state.firestore.data.members;
-  });
-//   useFirestoreConnect({
-  //     collection: `users/${email}/projects`,
-//     storeAs: "projects",
-//   });
-//   const projects = useSelector((state) => {
-  //     return state.firestore.data.projects;
-//   });
-
-
-
   const [userInput, setuserInput] = useState({
-    title: '',
-    summary: '',
-    assign: Object.keys(members)[0],
+    title: "",
+    summary: "",
+    assign: email,
     type: "",
-    priority: '',
-    status: 'To do',
+    priority: "",
+    status: "To do",
     object: "",
     issuesAuthor: email,
-    id: uuid()
+    id: uuid(),
   });
 
-useEffect(() => {
+  // if modal was opened with bug then take data from that bug and set userInput
+  useEffect(() => {
     setuserInput({
-     title: props.currentBug ? props.currentBug.title : '',
-     summary: props.currentBug ? props.currentBug.summary : '',
-     assign: props.currentBug ? props.currentBug.assign : Object.keys(members)[0],
-     type: props.currentBug ? props.currentBug.type : 'Documentation',
-     priority: props.currentBug ? props.currentBug.priority : '',
-     status: props.currentBug ? props.currentBug.status : 'To do',
-     object: "",
-     issuesAuthor: email,
-     id: uuid()
-   })
-}, [props.currentBug])
-console.log(userInput);
+      title: currentBug ? currentBug.title : "",
+      summary: currentBug ? currentBug.summary : "",
+      assign: currentBug ? currentBug.assign : email,
+      type: currentBug ? currentBug.type : "Documentation",
+      priority: currentBug ? currentBug.priority : "",
+      status: currentBug ? currentBug.status : "To do",
+      object: "",
+      issuesAuthor: email,
+      id: uuid(),
+    });
+    // managing buttons colors
+    if (currentBug) {
+      buttonColors(currentBug.type);
+      buttonColors(currentBug.priority);
+    } else {
+      setSelectColor("#bdbdbd");
+      setPriorityColor("#0277bd");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentBug]);
 
   const [selectColor, setSelectColor] = useState("#bdbdbd");
   const [priorityColor, setPriorityColor] = useState("#0277bd");
 
-  const formHandler = (e) => {
-    switch (e.target.value) {
+  // buttons colors function
+  const buttonColors = (type) => {
+    switch (type) {
       case "Documentation":
         setSelectColor("#bdbdbd");
         break;
@@ -100,185 +101,224 @@ console.log(userInput);
       case "Submitted":
       case "Done":
       case "Object":
-        break;  
+        break;
       default:
-        setSelectColor("#fff");
     }
+  };
+
+  // user Input handler
+  const formHandler = (e) => {
+    buttonColors(e.target.value);
     setuserInput({
       ...userInput,
       [e.target.name]: e.target.value,
     });
-
   };
 
+  // update firestore with new issue
   const addNewIssue = () => {
-    const db = firestore.collection("users").doc(email).collection("projects").doc(props.currentProject.projectId); // => currentProject
+    const db = firestore.collection("projects").doc(id);
     db.update({
-      [`issues.${bug ? bug.status : userInput.status}`]: firestore.FieldValue.arrayRemove(bug),
+      [`issues.${
+        bug ? bug.status : userInput.status
+      }`]: firestore.FieldValue.arrayRemove(bug),
     }).then(() => {
       db.update({
-        [`issues.${userInput.status}`]: firestore.FieldValue.arrayUnion(userInput),
-        // firestore.FieldValue.arrayUnion(userInput)
-        // dar reikia update members projects/issues -- ar rodyti tik tas kurias jam priskiria?
-      })
-    })
-     .then(() => {
-          // assign issue to user
-          // userInput.assign &&
-          console.log(userInput.assign);
-          // firestore.collection('members').doc(userInput.assign).update({
-          //     [`projects.${props.currentProject.projectId}.issues.${userInput.status}`]: firestore.FieldValue.arrayRemove(bug)
-          // })
-      }).then(() => {
-      //   firestore.collection('members').doc(userInput.assign).update({
-      //     [`projects.${props.currentProject.projectId}.issues.${userInput.status}`]: firestore.FieldValue.arrayUnion(userInput)
-      // })
-      })
+        [`issues.${userInput.status}`]: firestore.FieldValue.arrayUnion(
+          userInput
+        ),
+      });
+    });
+    // reset userInput
     setuserInput({
       ...userInput,
-      title: '',
-      summary: '',
-      type: 'Documentation',
-      id: uuid()
+      title: "",
+      summary: "",
+      type: "Documentation",
+      id: uuid(),
     });
-    props.showIssuesModal();
+    showIssuesModal();
   };
 
   const cancelModal = (e) => {
     e.preventDefault();
-    props.showIssuesModal();
+    showIssuesModal();
   };
 
   if (members) {
     return (
-        <>
-          <div
-            className={
-              !props.issuesModalState
-                ? `${styles.hideBackground}`
-                : `${styles.showBackground}`
-            }
-            onClick={() => props.showIssuesModal()}
-          ></div>
-          <div
-            className={
-              !props.issuesModalState
-                ? `${styles.modal}`
-                : `${styles.modal} ${styles.show}`
-            }
-          >
-            <div className={styles.modal__header}>
-              <h3>Add new issue </h3>
-              <span onClick={() => props.showIssuesModal()}>
-                <i className="fas fa-times"></i>
-              </span>
-            </div>
-            <div className={styles.modal__body}>
-              <div className={styles.options}>
-                <div className={styles.options__top}>
-                  <div className={styles.summary}>
-                    <p>Summary</p>
-                    <input
-                      className={styles.project__name}
-                      type="text"
-                      onChange={formHandler}
-                      name="title"
-                      value={userInput.title}
-                    ></input>
-                  </div>
-                  <div className={styles.assign}>
-                    <p>Assign to</p>
-                    <select name="assign" onChange={formHandler} defaultValue={userInput.assign}>
-                        {Object.keys(members).map(id => {
-                            return <option key={id} value={id}>{members[id].userEmail}</option>
-                        })}
-                    </select>
-                  </div>
+      <>
+        <div
+          className={
+            !issuesModalState
+              ? `${styles.hideBackground}`
+              : `${styles.showBackground}`
+          }
+          onClick={() => showIssuesModal()}
+        ></div>
+        <div
+          className={
+            !issuesModalState
+              ? `${styles.modal}`
+              : `${styles.modal} ${styles.show}`
+          }
+        >
+          <div className={styles.modal__header}>
+            <h3>Add new issue </h3>
+            <span
+              onClick={() => {
+                showIssuesModal();
+              }}
+            >
+              <i className="fas fa-times"></i>
+            </span>
+          </div>
+          <div className={styles.modal__body}>
+            <div className={styles.options}>
+              <div className={styles.options__top}>
+                <div className={styles.summary}>
+                  <p>Summary</p>
+                  <input
+                    className={styles.project__name}
+                    type="text"
+                    onChange={formHandler}
+                    name="title"
+                    value={userInput.title}
+                  ></input>
                 </div>
-    
-                <div className={styles.options__bottom}>
-                  <div
-                    className={`${styles.options__bottom__element} ${styles.issue__type}`}
+                <div className={styles.assign}>
+                  <p>Assign to</p>
+                  <select
+                    name="assign"
+                    onChange={formHandler}
+                    value={userInput.assign}
                   >
-                    <p>Issue type</p>
-                    <select
-                      name="type"
-                      onChange={formHandler}
-                      style={{ backgroundColor: selectColor }}
-                      value={userInput.type}
-                    >
-                      <option style={{ backgroundColor: "#fff" }}>No type</option>
-                      <option value="Documentation" style={{ backgroundColor: "#bdbdbd" }}>
-                        Documentation
-                      </option>
-                      <option value="Task" style={{ backgroundColor: "#64b5f6" }}>Task</option>
-                      <option value="Feature" style={{ backgroundColor: "#4db6ac" }}>
-                        Feature
-                      </option>
-                      <option value="Usability problem" style={{ backgroundColor: "#9575cd" }}>
-                        Usability problem
-                      </option>
-                      <option style={{ backgroundColor: "#e3af5b" }}>Bug</option>
-                      <option style={{ backgroundColor: "#e57373" }}>Crash</option>
-                    </select>
-                  </div>
-    
-                  <div className={`${styles.options__bottom__element}`}>
-                    <p>Priority</p>
-                    <select
-                      name="priority"
-                      onChange={formHandler}
-                      style={{ backgroundColor: priorityColor }}
-                      value={userInput.priority}
-                    >
-                      <option value="Low" style={{ backgroundColor: "#0277bd" }}>Low</option>
-                      <option style={{ backgroundColor: "#2e7d32" }}>Medium</option>
-                      <option style={{ backgroundColor: "#ff8f00" }}>High</option>
-                      <option style={{ backgroundColor: "#c62828" }}>
-                        Critical
-                      </option>
-                    </select>
-                  </div>
-    
-                  <div className={`${styles.options__bottom__element}`}>
-                    <p>Status</p>
-                    <select name="status" onChange={formHandler} value={userInput.status}>
-                      <option value="Submitted">Submitted</option>
-                      <option>To do</option>
-                      <option>In progress</option>
-                      <option>Done</option>
-                    </select>
-                  </div>
-    
-                  <div className={`${styles.options__bottom__element}`}>
-                    <p>Test object</p>
-                    <select name="object" onChange={formHandler} value={userInput.object}>
-                      <option>object</option>
-                    </select>
-                  </div>
+                    {Object.keys(currentProject.members).map((id) => {
+                      return (
+                        <option key={id} value={id}>
+                          {id}
+                        </option>
+                      );
+                    })}
+                  </select>
                 </div>
               </div>
-    
-              <div className={styles.textArea}>
-                <label>Description</label>
-                <textarea name="summary" onChange={formHandler} defaultValue={userInput.summary}></textarea>
+
+              <div className={styles.options__bottom}>
+                <div
+                  className={`${styles.options__bottom__element} ${styles.issue__type}`}
+                >
+                  <p>Issue type</p>
+                  <select
+                    name="type"
+                    onChange={formHandler}
+                    style={{ backgroundColor: selectColor }}
+                    value={userInput.type}
+                  >
+                    <option style={{ backgroundColor: "#fff" }}>No type</option>
+                    <option
+                      value="Documentation"
+                      style={{ backgroundColor: "#bdbdbd" }}
+                    >
+                      Documentation
+                    </option>
+                    <option value="Task" style={{ backgroundColor: "#64b5f6" }}>
+                      Task
+                    </option>
+                    <option
+                      value="Feature"
+                      style={{ backgroundColor: "#4db6ac" }}
+                    >
+                      Feature
+                    </option>
+                    <option
+                      value="Usability problem"
+                      style={{ backgroundColor: "#9575cd" }}
+                    >
+                      Usability problem
+                    </option>
+                    <option style={{ backgroundColor: "#e3af5b" }}>Bug</option>
+                    <option style={{ backgroundColor: "#e57373" }}>
+                      Crash
+                    </option>
+                  </select>
+                </div>
+
+                <div className={`${styles.options__bottom__element}`}>
+                  <p>Priority</p>
+                  <select
+                    name="priority"
+                    onChange={formHandler}
+                    style={{ backgroundColor: priorityColor }}
+                    value={userInput.priority}
+                  >
+                    <option value="Low" style={{ backgroundColor: "#0277bd" }}>
+                      Low
+                    </option>
+                    <option style={{ backgroundColor: "#2e7d32" }}>
+                      Medium
+                    </option>
+                    <option style={{ backgroundColor: "#ff8f00" }}>High</option>
+                    <option style={{ backgroundColor: "#c62828" }}>
+                      Critical
+                    </option>
+                  </select>
+                </div>
+
+                <div className={`${styles.options__bottom__element}`}>
+                  <p>Status</p>
+                  <select
+                    name="status"
+                    onChange={formHandler}
+                    value={userInput.status}
+                  >
+                    <option value="Submitted">Submitted</option>
+                    <option>To do</option>
+                    <option>In progress</option>
+                    <option>Done</option>
+                  </select>
+                </div>
+
+                <div className={`${styles.options__bottom__element}`}>
+                  <p>Test object</p>
+                  <select
+                    name="object"
+                    onChange={formHandler}
+                    value={userInput.object}
+                  >
+                    <option>object</option>
+                  </select>
+                </div>
               </div>
-              <div className={styles.buttons}>
-                <Button onClick={addNewIssue}>Save</Button>
-                <Button error onClick={cancelModal}>
-                  Cancel
-                </Button>
-              </div>
+            </div>
+
+            <div className={styles.textArea}>
+              <label>Description</label>
+              <textarea
+                name="summary"
+                onChange={formHandler}
+                value={userInput.summary}
+              ></textarea>
+            </div>
+            <div className={styles.buttons}>
+              <Button
+                onClick={() => {
+                  addNewIssue();
+                }}
+              >
+                Save
+              </Button>
+              <Button error onClick={cancelModal}>
+                Cancel
+              </Button>
             </div>
           </div>
-        </>
-      );
+        </div>
+      </>
+    );
   } else {
-      return (
-          <div>loading...</div>
-      )
+    return <div>loading...</div>;
   }
-  
 }
 
 const mapStateToProps = (state) => {

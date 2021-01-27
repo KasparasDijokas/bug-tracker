@@ -1,17 +1,28 @@
 import React from "react";
 import { MembersRoles } from "../components";
 import DashboardContainer from "../containers/DashboardContainer";
-import useCurrentProject from "../hooks/useCurrentProject";
 import { Spinner } from "../components";
+import { useFirestoreConnect } from "react-redux-firebase";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 const RolesPage = () => {
-  const currentProject = useCurrentProject();
+  let { id } = useParams();
 
-  if (currentProject) {
+  useFirestoreConnect({
+    collection: `projects`,
+    storeAs: "projectsCollection",
+  });
+
+  const { projectsCollection } = useSelector((state) => {
+    return state.firestore.data;
+  });
+
+  if (projectsCollection) {
     return (
       <div style={{ display: "flex" }}>
-        <DashboardContainer />
-        <MembersRoles currentProject={currentProject} />
+        <DashboardContainer id={id} />
+        <MembersRoles currentProject={projectsCollection[id]} id={id} />
       </div>
     );
   } else {

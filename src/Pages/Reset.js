@@ -58,12 +58,12 @@ const FormContainer = () => {
             ) : (
               <>
                 <Form.Span>Back to</Form.Span>{" "}
-                <Form.LinkEl to="signin">Login page ?</Form.LinkEl>{" "}
+                <Form.LinkEl to={ROUTES.SIGN_IN}>Login page ?</Form.LinkEl>{" "}
               </>
             )}
           </Form.Frame>
           <Form.AccountWrapper>
-            <Form.LinkEl to="/signup">
+            <Form.LinkEl to={ROUTES.SIGN_UP}>
               Create your account
               <i className="fas fa-long-arrow-alt-right"></i>
             </Form.LinkEl>

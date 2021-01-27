@@ -121,7 +121,7 @@ export const ProjectCard = styled.div`
   }
 
   span {
-    color: #333333;
+    color: #28bd8b;
     font-family: "opensans bold", sans-serif;
     font-weight: bold;
     line-height: 40px;
@@ -132,6 +132,12 @@ export const ProjectCard = styled.div`
     margin: 0;
     color: #666666;
     font-size: 0.875rem;
+  }
+
+  h4 {
+    margin: 0;
+    line-height: 40px;
+    color: #28bd8b;
   }
 `;
 

@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Dashboard } from "../components";
-import firebase from '../config/firebase';
-import {useHistory} from 'react-router-dom'
+import firebase from "../config/firebase";
+import { useHistory } from "react-router-dom";
+import * as ROUTES from "../constants/routes";
 
 const DashboardContainer = () => {
   const history = useHistory();
@@ -9,10 +10,13 @@ const DashboardContainer = () => {
   const user = firebase.auth().currentUser;
 
   const signOutHandler = () => {
-    firebase.auth().signOut().then(() => {
-      history.push('/signin')
-    })
-  }
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        history.push(ROUTES.SIGN_IN);
+      });
+  };
 
   return (
     <Dashboard show={openDashboad}>
@@ -29,11 +33,9 @@ const DashboardContainer = () => {
           ></i>
         )}
         <h1>{user && user.displayName}</h1>
-        <p>
-          {user && user.email}
-        </p>
+        <p>{user && user.email}</p>
       </Dashboard.Summary>
-      <Dashboard.Link to="/projects">
+      <Dashboard.Link to={ROUTES.PROJECTS}>
         <span>
           <i className="fab fa-buffer"></i>
         </span>
@@ -41,7 +43,7 @@ const DashboardContainer = () => {
       </Dashboard.Link>
       <Dashboard.Route onClick={signOutHandler}>
         <span>
-        <i className="fas fa-sign-out-alt"></i>
+          <i className="fas fa-sign-out-alt"></i>
         </span>
         Sign out
       </Dashboard.Route>
@@ -50,4 +52,3 @@ const DashboardContainer = () => {
 };
 
 export default DashboardContainer;
-
